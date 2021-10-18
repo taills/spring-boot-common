@@ -1,0 +1,10 @@
+stages:
+  - build
+build:
+  stage: build
+  tags:
+    - Shell
+  script:
+    - pwd
+    - mvn clean package deploy -U
+  allow_failure: false

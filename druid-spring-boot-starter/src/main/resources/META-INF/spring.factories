@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.gxmafeng.common.DruidAutoConfiguration,\
+com.gxmafeng.common.WebSecurityAutoConfiguration
