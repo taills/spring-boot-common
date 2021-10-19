@@ -46,6 +46,7 @@
         <module>utils</module>
         <module>druid-spring-boot-starter</module>
         <module>jpa-spring-boot-starter</module>
+        <module>api-extension</module>
     </modules>
 
 
