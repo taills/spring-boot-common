@@ -1,16 +1,22 @@
 package com.gxmafeng.service.common.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /**
- * ID 生成器
+ * ID 生成器 雪花算法
  *
- * @author taills
+ * @author copy
  * @Date 2020-05-22
  */
-public class IdGen {
+public class SnowFlake {
+
+    @Value("${snow-flake.worker-dd:0}")
     private long workerId;
+
+    @Value("${snow-flake.datacenter-id:0}")
     private long datacenterId;
+
     private long sequence = 0L;
-    //某个时间戳
     private final static long timeSeed = 1590074023657L;                              //  某个时间戳
     private long workerIdBits = 5L;                                     //  节点ID长度
     private long datacenterIdBits = 5L;                                 //  数据中心ID长度
@@ -24,18 +30,17 @@ public class IdGen {
     private long lastTimestamp = -1L;
 
     private static class IdGenHolder {
-        private static final IdGen instance = new IdGen();
+        private static final SnowFlake instance = new SnowFlake();
     }
 
-    public static IdGen get() {
+    public static SnowFlake get() {
         return IdGenHolder.instance;
     }
 
-    public IdGen() {
-        this(0L, 0L);
+    public SnowFlake() {
     }
 
-    public IdGen(long workerId, long datacenterId) {
+    public SnowFlake(long workerId, long datacenterId) {
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
         }
@@ -78,15 +83,6 @@ public class IdGen {
         // time                                       datacenterId   workerId    sequence
         return ((timestamp - timeSeed) << timestampLeftShift) | (datacenterId << datacenterIdShift)
                 | (workerId << workerIdShift) | sequence;
-    }
-
-    /**
-     * 生成一个 62 进制的 字符串ID，最大为 Long.MAX_VALUE 转换来的 11位字符串 aZl8N0y58M7
-     *
-     * @return String type id
-     */
-    public String nextSid() {
-        return NumericConvertUtils.toOtherNumberSystem(this.nextId(), 62);
     }
 
     protected long tilNextMillis(long lastTimestamp) {
