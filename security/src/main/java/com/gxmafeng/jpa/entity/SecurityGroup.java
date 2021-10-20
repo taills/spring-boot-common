@@ -50,11 +50,14 @@ public class SecurityGroup extends BaseEntity implements Serializable {
 	@Column(name = "group_name", nullable = true, length = 64)
 	private String groupName;
 
+	@OneToMany(mappedBy = "parentId",fetch = FetchType.EAGER)
+	private List<SecurityGroup> childrenGroups = new ArrayList<>();
+
 
 	@ApiModelProperty(value = "角色列表")
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(name = "security_group_role",
 			joinColumns = @JoinColumn(name="group_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<SecurityRole> roleList = new ArrayList<>();
+	private List<SecurityRole> roles = new ArrayList<>();
 }

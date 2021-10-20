@@ -4,12 +4,17 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.gxmafeng.jpa.entity.BaseEntity;
 import javax.persistence.*;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import lombok.EqualsAndHashCode;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -71,4 +76,20 @@ public class SecurityUser extends BaseEntity implements Serializable {
 	@ApiModelProperty(value = "密码")
 	@Column(name = "password", nullable = true, length = 64)
 	private String password;
+
+	@ApiModelProperty(value = "关联用户的角色列表")
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JoinTable(name = "security_user_role",
+			joinColumns = @JoinColumn(name="user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private List<SecurityRole> roles = new ArrayList<>();
+
+
+	@ApiModelProperty(value = "所属组")
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	@JoinTable(name = "security_user_group",
+			joinColumns = @JoinColumn(name="user_id"),
+			inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private List<SecurityGroup> groups = new ArrayList<>();
 }
