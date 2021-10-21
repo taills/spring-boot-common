@@ -21,7 +21,7 @@ public class BaseEntity {
      */
     @Id
     @Column(name = "id")
-    @ApiModelProperty(value = "主键id")
+    @ApiModelProperty(value = "主键id", hidden = true)
     private Long id;
 
 
@@ -30,7 +30,7 @@ public class BaseEntity {
      * nullable : true
      * default  : CURRENT_TIMESTAMP
      */
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "创建时间", hidden = true)
     @Column(name = "gmt_create", nullable = true)
     private java.util.Date gmtCreate;
 
@@ -39,7 +39,7 @@ public class BaseEntity {
      * nullable : true
      * default  : CURRENT_TIMESTAMP
      */
-    @ApiModelProperty(value = "修改时间")
+    @ApiModelProperty(value = "修改时间", hidden = true)
     @Column(name = "gmt_modified", nullable = true)
     private java.util.Date gmtModified;
 
