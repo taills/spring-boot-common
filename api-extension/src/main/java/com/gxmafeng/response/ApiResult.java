@@ -22,7 +22,7 @@ public class ApiResult<T> {
      */
     private T data;
 
-    private final static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+    private final static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
 
     private ApiResult(ApiResultStatus apiResultStatus, T data) {
         this.code = apiResultStatus.getCode();
@@ -118,6 +118,6 @@ public class ApiResult<T> {
     }
 
     public String toJsonString() {
-        return gson.toJson(this).toString();
+        return gson.toJson(this);
     }
 }

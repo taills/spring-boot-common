@@ -57,3 +57,19 @@ throw new BaseException(ApiResult.failure(10000, "用户ID不能小于1"));
 ```java
 throw new RuntimeException("用户不存在");
 ```
+
+## Swagger 配置
+```yaml
+# ===== 自定义swagger配置 ===== #
+swagger:
+  group-name: MF-API
+  enable: true
+  application-name: MFApp
+  application-version: 1.0
+  application-description: MF Application
+  contact:
+    name: developer
+    email: root@gxmafeng.com
+    url: https://www.gxmafeng.com
+
+```
