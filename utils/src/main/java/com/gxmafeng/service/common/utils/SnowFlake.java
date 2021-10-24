@@ -85,6 +85,13 @@ public class SnowFlake {
                 | (workerId << workerIdShift) | sequence;
     }
 
+    /**
+     * 字符串格式的ID
+     * @return
+     */
+    public String nextSid() {
+        return NumericConvertUtils.toOtherNumberSystem(this.nextId(), 60);
+    }
     protected long tilNextMillis(long lastTimestamp) {
         long timestamp = timeGen();
         while (timestamp <= lastTimestamp) {

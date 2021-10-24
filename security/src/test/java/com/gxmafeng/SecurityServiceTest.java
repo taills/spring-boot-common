@@ -7,6 +7,7 @@ import com.gxmafeng.jpa.service.SecurityGroupRoleService;
 import com.gxmafeng.jpa.service.SecurityGroupService;
 import com.gxmafeng.jpa.service.SecurityRoleService;
 import com.gxmafeng.jpa.service.SecurityUserService;
+import com.gxmafeng.service.common.utils.SnowFlake;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
@@ -19,14 +20,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SecurityApp.class)
-@Rollback
+@Rollback(value = false)
 @Transactional
 public class SecurityServiceTest {
 
@@ -42,13 +41,13 @@ public class SecurityServiceTest {
     @Autowired
     SecurityUserService userService;
 
-    private Long adminGroupId;
-    private Long userGroupId;
+    private String adminGroupId;
+    private String userGroupId;
 
-    private Long rootGroupId;
+    private String rootGroupId;
 
-    private Long roleAdminId;
-    private Long roleUserId;
+    private String roleAdminId;
+    private String roleUserId;
 
     @Before
     public void setUp() throws Exception {
@@ -60,8 +59,8 @@ public class SecurityServiceTest {
 
         SecurityGroup groupAdmin = new SecurityGroup();
         groupAdmin.setGroupName("超级管理员");
-        groupAdmin.setParentId(187358314131095552L);
-        List<SecurityRole> roles = new ArrayList<>();
+        groupAdmin.setParentId("");
+        Set<SecurityRole> roles = new HashSet<>();
         roles.add(roleAdmin);
         groupAdmin.setRoles(roles);
         groupAdmin = groupService.save(groupAdmin);
@@ -79,7 +78,7 @@ public class SecurityServiceTest {
         SecurityGroup groupUser = new SecurityGroup();
         groupUser.setGroupName("我是普通用户");
         groupUser.setParentId(groupAdmin.getId());
-        List<SecurityRole> roles1 = new ArrayList<>();
+        Set<SecurityRole> roles1 = new HashSet<>();
         roles1.add(roleUser);
         groupUser.setRoles(roles1);
         groupUser = groupService.save(groupUser);
@@ -91,8 +90,8 @@ public class SecurityServiceTest {
          */
         SecurityGroup group = new SecurityGroup();
         group.setGroupName("ROOT");
-        group.setParentId(187358314131095552L);
-        List<SecurityRole> roleSet = new ArrayList<>();
+        group.setParentId(adminGroupId);
+        Set<SecurityRole> roleSet = new HashSet<>();
         roleSet.add(roleService.getById(roleAdminId));
         roleSet.add(roleService.getById(roleUserId));
         group.setRoles(roleSet);
@@ -101,18 +100,18 @@ public class SecurityServiceTest {
         rootGroupId = groupNew.getId();
 
         SecurityUser user = new SecurityUser();
-        user.setUsername("t_user");
+        user.setUsername(SnowFlake.get().nextSid());
         user.setNickname("测试用户哦");
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode("1234567890"));
-        user.setMobile("13712345678");
+        user.setMobile(String.valueOf(SnowFlake.get().nextId()).substring(0, 11));
         user.setAvatarUrl("http://localhost/123.png");
         //设置用户的角色
-        List<SecurityRole> userRoles = new ArrayList<>();
+        Set<SecurityRole> userRoles = new HashSet<>();
         userRoles.add(roleService.getById(roleUserId));
         user.setRoles(userRoles);
         //设置用户的组
-        List<SecurityGroup> userGroups = new ArrayList<>();
+        Set<SecurityGroup> userGroups = new HashSet<>();
         userGroups.add(groupNew);
         user.setGroups(userGroups);
 
@@ -127,14 +126,7 @@ public class SecurityServiceTest {
         });
     }
 
-    @After
-    public void tearDown() throws Exception {
-        log.info("tearDown");
-    }
-
-
     @Test
-    @Transactional
     public void testGetAndEdit() throws Exception {
 
         SecurityGroup admin = groupService.getById(adminGroupId);
@@ -165,8 +157,8 @@ public class SecurityServiceTest {
         if (optional.isPresent()) {
             log.info("admin = {}", optional.get());
             SecurityGroup group = optional.get();
-            List<SecurityRole> roleList = group.getRoles();
-            roleList.remove(0);
+            Set<SecurityRole> roleList = group.getRoles();
+            roleList.remove(1);
             group.setRoles(roleList);
             groupService.save(group);
             optional = groupService.findById(adminGroupId);

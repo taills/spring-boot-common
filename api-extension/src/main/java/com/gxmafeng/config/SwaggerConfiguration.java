@@ -34,7 +34,7 @@ import java.util.List;
 @EnableOpenApi
 @Configuration
 @Slf4j
-public class SwaggerConfiguration implements WebMvcConfigurer {
+public class SwaggerConfiguration {
     private final SwaggerProperties swaggerProperties;
 
     public SwaggerConfiguration(SwaggerProperties swaggerProperties) {
@@ -87,30 +87,5 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
         List<SecurityReference> securityReferences = new ArrayList<>();
         securityReferences.add(new SecurityReference("Authorization", authorizationScopes));
         return securityReferences;
-    }
-
-    /**
-     * 通用拦截器排除swagger设置，所有拦截器都会自动加swagger相关的资源排除信息
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        try {
-            Field registrationsField = FieldUtils.getField(InterceptorRegistry.class, "registrations", true);
-            List<InterceptorRegistration> registrations = (List<InterceptorRegistration>) ReflectionUtils.getField(registrationsField, registry);
-            log.info("为 Swagger 配置拦截器");
-            if (registrations != null) {
-                for (InterceptorRegistration interceptorRegistration : registrations) {
-                    interceptorRegistration
-                            .excludePathPatterns("/swagger**")
-                            .excludePathPatterns("/swagger-ui/**")
-                            .excludePathPatterns("/webjars/**")
-                            .excludePathPatterns("/v3/**")
-                            .excludePathPatterns("/doc.html");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

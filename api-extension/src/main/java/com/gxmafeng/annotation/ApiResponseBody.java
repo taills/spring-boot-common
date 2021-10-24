@@ -1,4 +1,4 @@
-package com.gxmafeng.response;
+package com.gxmafeng.annotation;
 
 
 import org.springframework.web.bind.annotation.ResponseBody;

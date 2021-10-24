@@ -11,10 +11,10 @@ import javax.annotation.Resource;
  * SecurityApiLog service层
  *
  * @author auto generated
- * @date 2021-10-20 15:44:55
+ * @date 2021-10-24 13:56:40
  */
 @Service
-public class SecurityApiLogService extends AbstractService<SecurityApiLog, Long> {
+public class SecurityApiLogService extends AbstractService<SecurityApiLog, String> {
 
 	@Resource
 	private SecurityApiLogRepository rep;

@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * SecurityUserGroup Repository层
  *
  * @author auto generated
- * @date 2021-10-20 16:37:26
+ * @date 2021-10-24 13:56:40
  */
-public interface SecurityUserGroupRepository extends BaseRepository<SecurityUserGroup, Long>, SecurityUserGroupRepositoryCustom {
+public interface SecurityUserGroupRepository extends BaseRepository<SecurityUserGroup, String> {
 
 }

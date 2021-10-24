@@ -13,10 +13,10 @@ import java.io.Serializable;
 
 
 /**
- * 角色表
+ * 角色
  *
  * @author auto generated
- * @date 2021-10-20 15:44:55
+ * @date 2021-10-24 13:56:40
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -24,7 +24,7 @@ import java.io.Serializable;
 @Table(name = "security_role")
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "update security_role set is_deleted = true where id = ?")
-@ApiModel(value = "角色表")
+@ApiModel(value = "角色")
 public class SecurityRole extends BaseEntity implements Serializable {
 
 	/**

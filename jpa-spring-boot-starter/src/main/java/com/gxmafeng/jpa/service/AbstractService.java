@@ -1,10 +1,17 @@
 package com.gxmafeng.jpa.service;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
+import com.gxmafeng.jpa.entity.BaseEntity;
 import com.gxmafeng.jpa.repository.BaseRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -20,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @Date 2021/10/18 11:02 下午
  **/
 
-public abstract class AbstractService<T, ID> implements BaseService<T, ID> {
+public abstract class AbstractService<T extends BaseEntity, ID> implements BaseService<T, ID> {
 
     /**
      * 泛型注入
@@ -220,8 +227,42 @@ public abstract class AbstractService<T, ID> implements BaseService<T, ID> {
     public T getById(ID id) {
         return this.baseRepository.getById(id);
     }
+
     @Override
     public void deleteAllById(Iterable<? extends ID> ids) {
         this.baseRepository.deleteAllById(ids);
     }
+
+
+    @Override
+    public Class<T> getEntityClass() {
+        Class<T> tClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return tClass;
+    }
+
+    @Override
+    public <S extends T> S update(S entity) {
+        S original = (S) this.baseRepository.getById((ID) entity.getId());
+        copyNonNullProperties(entity, original);
+        return this.baseRepository.save(original);
+    }
+
+    public static void copyNonNullProperties(Object src, Object target) {
+        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+    }
+
+    public static String[] getNullPropertyNames(Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<String>();
+        for (java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
+    }
+
+
 }

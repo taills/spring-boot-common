@@ -16,7 +16,7 @@ import java.io.Serializable;
  * 用户-用户组 [中间表]
  *
  * @author auto generated
- * @date 2021-10-20 16:37:26
+ * @date 2021-10-24 13:56:40
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -34,7 +34,7 @@ public class SecurityUserGroup extends BaseEntity implements Serializable {
 	 */
 	@ApiModelProperty(value = "用户ID")
 	@Column(name = "user_id", nullable = true, length = 20)
-	private Long userId;
+	private String userId;
 
 	/**
 	 * 用户组ID
@@ -43,5 +43,5 @@ public class SecurityUserGroup extends BaseEntity implements Serializable {
 	 */
 	@ApiModelProperty(value = "用户组ID")
 	@Column(name = "group_id", nullable = true, length = 20)
-	private Long groupId;
+	private String groupId;
 }

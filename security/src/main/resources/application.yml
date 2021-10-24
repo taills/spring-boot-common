@@ -1,6 +1,9 @@
 spring:
+  cache:
+    type: simple
   main:
-    lazy-initialization: true
+    lazy-initialization: false
+    # 上面的为 true 时，swagger 不显示ApiModule
   security:
     user:
       name: user
@@ -10,7 +13,7 @@ spring:
       filter:
         enabled: true #启用Restful 风格 的PUT DELETE 请求方式
   jpa:
-    show-sql: true # 启用后，会在标准输出上输出sql语句
+    show-sql: false # 启用后，会在标准输出上输出sql语句
     hibernate:
       ddl-auto: none
   datasource:
@@ -31,6 +34,22 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
+
+# ===== 自定义swagger配置 ===== #
+swagger:
+  group-name: MF Security Module
+  enable: true
+  application-name: MF Security Module
+  application-version: 1.0
+  application-description: 码峰科技安全模块
+  contact:
+    name: developer
+    email: root@gxmafeng.com
+    url: https://www.gxmafeng.com
 
 
-
+logging:
+  level:
+    root: info
+    com.gxmafeng: debug

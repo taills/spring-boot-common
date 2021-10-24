@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * SecurityUserRole Repository层
  *
  * @author auto generated
- * @date 2021-10-20 16:37:26
+ * @date 2021-10-24 13:56:40
  */
-public interface SecurityUserRoleRepository extends BaseRepository<SecurityUserRole, Long>, SecurityUserRoleRepositoryCustom {
+public interface SecurityUserRoleRepository extends BaseRepository<SecurityUserRole, String> {
 
 }
