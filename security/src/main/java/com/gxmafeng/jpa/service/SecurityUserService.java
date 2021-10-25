@@ -1,20 +1,16 @@
 package com.gxmafeng.jpa.service;
 
-import com.gxmafeng.jpa.repository.SecurityUserRepository;
 import com.gxmafeng.jpa.entity.SecurityUser;
+import com.gxmafeng.jpa.repository.SecurityUserRepository;
 import com.gxmafeng.security.userdetails.SecurityUserDetails;
 import com.gxmafeng.service.common.utils.SnowFlake;
-import com.nimbusds.jwt.JWT;
-import com.sun.istack.NotNull;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

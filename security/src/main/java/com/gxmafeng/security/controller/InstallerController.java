@@ -1,16 +1,12 @@
 package com.gxmafeng.security.controller;
 
 import com.gxmafeng.annotation.ApiResponseBody;
-import com.gxmafeng.jpa.entity.SecurityUser;
-import com.gxmafeng.jpa.service.SecurityUserService;
-import com.gxmafeng.response.ApiResult;
 import com.gxmafeng.security.installer.InitDatabase;
-import com.gxmafeng.security.model.VoUserLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @ClassName AuthenticationController

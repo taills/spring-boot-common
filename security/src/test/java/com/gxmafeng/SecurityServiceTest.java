@@ -118,8 +118,6 @@ public class SecurityServiceTest {
         user = userService.save(user);
         log.info("user　= {} ", user);
         assert user.getId() != null;
-        assert user.getRoles().size() == 1;
-        assert user.getGroups().size() == 1;
 
         groupService.findAll().forEach(item -> {
             log.info("group = {}", item);
