@@ -5,7 +5,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.ToString;
-
+/**
+ * @author taills
+ * @date 2019/05/01
+ */
 @Getter
 @ToString
 public class ApiResult<T> {
@@ -22,7 +25,7 @@ public class ApiResult<T> {
      */
     private T data;
 
-    private final static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
+    private final static Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create();
 
     private ApiResult(ApiResultStatus apiResultStatus, T data) {
         this.code = apiResultStatus.getCode();
@@ -118,6 +121,6 @@ public class ApiResult<T> {
     }
 
     public String toJsonString() {
-        return gson.toJson(this);
+        return GSON.toJson(this);
     }
 }

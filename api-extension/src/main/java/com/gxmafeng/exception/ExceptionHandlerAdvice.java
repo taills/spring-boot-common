@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @Author nil
  * @Date 2021/10/19 2:51 下午
  **/
-//@ControllerAdvice(annotations = ApiResponseBody.class)
 @ControllerAdvice
 @ResponseBody
 @Slf4j

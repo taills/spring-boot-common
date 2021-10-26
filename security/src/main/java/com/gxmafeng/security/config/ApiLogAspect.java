@@ -26,7 +26,7 @@ public class ApiLogAspect {
     public void apiLog() {
     }
 
-    private final static Gson gson = new Gson();
+    private final static Gson GSON = new Gson();
 
     @Before("apiLog()")
     public void doBefore(JoinPoint joinPoint) {
@@ -37,9 +37,10 @@ public class ApiLogAspect {
         log.info("HTTP Method    : {}", request.getMethod());
         log.info("Class Method   : {}.{}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
         log.info("IP             : {}", request.getRemoteAddr());
-        if (request.getUserPrincipal() != null)
+        if (request.getUserPrincipal() != null) {
             log.info("User           : {}", request.getUserPrincipal().getName());
-        log.info("Request Args   : {}", gson.toJson(joinPoint.getArgs()));
+        }
+        log.info("Request Args   : {}", GSON.toJson(joinPoint.getArgs()));
     }
 
     @After("apiLog()")

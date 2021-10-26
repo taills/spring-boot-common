@@ -32,6 +32,8 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final String tokenPrefix = "Bearer ";
+
     /**
      * JWT 私钥
      */
@@ -140,7 +142,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      */
     public Optional<SecurityUserDetails> parseToken(String httpHeaderToken) {
         Date now = new Date();
-        if (httpHeaderToken != null && httpHeaderToken.length() > 10 && httpHeaderToken.startsWith("Bearer ")) {
+        if (httpHeaderToken != null && httpHeaderToken.length() > tokenPrefix.length() && httpHeaderToken.startsWith(tokenPrefix)) {
             try {
                 String token = httpHeaderToken.substring(7);
                 Claims claims = Jwts.parser().setSigningKey(JWT_KEY).parseClaimsJws(token).getBody();

@@ -13,6 +13,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * @author taills
+ * @date 2019/05/01
+ */
 @RestControllerAdvice
 @ControllerAdvice(annotations = ApiResponseBody.class)
 public class ApiResponseBodyAdvice implements ResponseBodyAdvice<Object> {

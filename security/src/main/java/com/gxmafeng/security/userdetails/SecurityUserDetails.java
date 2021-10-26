@@ -23,12 +23,15 @@ public class SecurityUserDetails implements UserDetails {
 
     private List<GrantedAuthority> authorities;
 
+    private final String rolePrefix = "ROLE_";
+
     public Authentication getAuthentication() {
         return new UsernamePasswordAuthenticationToken(this.securityUser.getUsername(), this.token, this.getAuthorities());
     }
 
     /**
      * 从 SecurityUser 转换为 SecurityUserDetails
+     *
      * @param securityUser
      * @return
      */
@@ -49,8 +52,8 @@ public class SecurityUserDetails implements UserDetails {
             this.authorities = new ArrayList<>();
             this.securityUser.getRoles().forEach(securityRole -> {
                 String roleName = securityRole.getRoleName();
-                if (!roleName.startsWith("ROLE_")) {
-                    roleName = "ROLE_" + roleName;
+                if (!roleName.startsWith(rolePrefix)) {
+                    roleName = rolePrefix + roleName;
                 }
                 this.authorities.add(new SimpleGrantedAuthority(roleName));
             });
@@ -68,6 +71,7 @@ public class SecurityUserDetails implements UserDetails {
         return securityUser.getPassword();
     }
 
+    @Override
     public String getUsername() {
         return securityUser.getUsername();
     }

@@ -23,7 +23,7 @@ import java.util.*;
 @Service
 public class InitDatabase {
 
-    String[] ROLE_NAMES = {
+    final String[] ROLE_NAMES = {
             "ADMIN_READ", "ADMIN_CREATE", "ADMIN_UPDATE", "ADMIN_DELETE",
             "USER_READ", "USER_CREATE", "USER_UPDATE", "USER_DELETE",
             "READ"
@@ -42,6 +42,7 @@ public class InitDatabase {
     @Autowired
     SecurityUserService userService;
 
+    @SuppressWarnings("AlibabaMethodTooLong")
     public void init() {
         //角色
         Set<SecurityRole> adminRoles = new HashSet<>();

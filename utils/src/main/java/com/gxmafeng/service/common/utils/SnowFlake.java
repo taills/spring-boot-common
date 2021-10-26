@@ -17,24 +17,57 @@ public class SnowFlake {
     private long datacenterId;
 
     private long sequence = 0L;
-    private final static long timeSeed = 1590074023657L;                              //  某个时间戳
-    private long workerIdBits = 5L;                                     //  节点ID长度
-    private long datacenterIdBits = 5L;                                 //  数据中心ID长度
-    private long maxWorkerId = -1L ^ (-1L << workerIdBits);             //  最大支持机器节点数0~31，一共32个
-    private long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);     //  最大支持数据中心节点数0~31，一共32个
-    private long sequenceBits = 12L;                                    //  序列号12位
-    private long workerIdShift = sequenceBits;                          //  机器节点左移12位
-    private long datacenterIdShift = sequenceBits + workerIdBits;       //  数据中心节点左移17位
-    private long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits; //  时间毫秒数左移22位
-    private long sequenceMask = -1L ^ (-1L << sequenceBits);                          //  4095
+    /**
+     * 某个时间戳
+     */
+    private final static long TIME_SEED = 1590074023657L;
+    /**
+     * 节点ID长度
+     */
+    private long workerIdBits = 5L;
+    /**
+     * 数据中心ID长度
+     */
+    private long datacenterIdBits = 5L;
+    /**
+     * 最大支持机器节点数0~31，一共32个
+     */
+    private long maxWorkerId = -1L ^ (-1L << workerIdBits);
+    /**
+     * 最大支持数据中心节点数0~31，一共32个
+     */
+    private long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
+    /**
+     * 序列号12位
+     */
+    private long sequenceBits = 12L;
+    /**
+     * 机器节点左移12位
+     */
+    private long workerIdShift = sequenceBits;
+    /**
+     * 数据中心节点左移12 + 5 位
+     */
+    private long datacenterIdShift = sequenceBits + workerIdBits;
+    /**
+     * 时间毫秒数左移12 + 5 + 5 位
+     */
+    private long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
+    /**
+     * 4095
+     */
+    private long sequenceMask = -1L ^ (-1L << sequenceBits);
+    /**
+     * 上一个时间戳
+     */
     private long lastTimestamp = -1L;
 
     private static class IdGenHolder {
-        private static final SnowFlake instance = new SnowFlake();
+        private static final SnowFlake INSTANCE = new SnowFlake();
     }
 
     public static SnowFlake get() {
-        return IdGenHolder.instance;
+        return IdGenHolder.INSTANCE;
     }
 
     public SnowFlake() {
@@ -81,17 +114,19 @@ public class SnowFlake {
         // 最后按照规则拼出ID。
         // 000000000000000000000000000000000000000000  00000            00000       000000000000
         // time                                       datacenterId   workerId    sequence
-        return ((timestamp - timeSeed) << timestampLeftShift) | (datacenterId << datacenterIdShift)
+        return ((timestamp - TIME_SEED) << timestampLeftShift) | (datacenterId << datacenterIdShift)
                 | (workerId << workerIdShift) | sequence;
     }
 
     /**
      * 字符串格式的ID
+     *
      * @return
      */
     public String nextSid() {
         return NumericConvertUtils.toOtherNumberSystem(this.nextId(), 60);
     }
+
     protected long tilNextMillis(long lastTimestamp) {
         long timestamp = timeGen();
         while (timestamp <= lastTimestamp) {

@@ -21,7 +21,7 @@ import java.util.List;
  * @Date 2021/10/20 11:47 下午
  **/
 @Slf4j
-@Api(tags = "BaseController", description = "BaseController 子类的增删改查方法")
+@Api(tags = "BaseController")
 public class BaseController<T extends BaseEntity, ID> {
     private BaseService<T, ID> baseService;
     private String entityName;

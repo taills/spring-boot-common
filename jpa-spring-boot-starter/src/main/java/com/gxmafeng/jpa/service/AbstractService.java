@@ -65,6 +65,7 @@ public abstract class AbstractService<T extends BaseEntity, ID> implements BaseS
         this.baseRepository.flush();
     }
 
+    @Override
     @Transactional(rollbackFor = Throwable.class)
     public <S extends T> S saveAndFlush(S entity) {
         return this.baseRepository.saveAndFlush(entity);
@@ -72,6 +73,7 @@ public abstract class AbstractService<T extends BaseEntity, ID> implements BaseS
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
+    @Deprecated
     public void deleteInBatch(Iterable<T> entities) {
         this.baseRepository.deleteInBatch(entities);
     }
@@ -84,6 +86,7 @@ public abstract class AbstractService<T extends BaseEntity, ID> implements BaseS
 
     @Override
     @Transactional(readOnly = true, rollbackFor = Throwable.class)
+    @Deprecated
     public T getOne(ID id) {
         return this.baseRepository.getOne(id);
     }
@@ -258,7 +261,9 @@ public abstract class AbstractService<T extends BaseEntity, ID> implements BaseS
         Set<String> emptyNames = new HashSet<String>();
         for (java.beans.PropertyDescriptor pd : pds) {
             Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
+            if (srcValue == null) {
+                emptyNames.add(pd.getName());
+            }
         }
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);

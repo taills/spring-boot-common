@@ -38,23 +38,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } else {
             log.debug("Token 解析失败");
         }
-//        // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
-//        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-//            jwtToken = requestTokenHeader.substring(7);
-//            if (jwtTokenService.validateToken(jwtToken)) {
-//                JwtUserInfo tokenClaims = jwtTokenService.getAllClaims(jwtToken);
-//                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-//                        new WechatUserDetails(tokenClaims.getUserId()), tokenClaims, null);
-//                usernamePasswordAuthenticationToken
-//                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-//
-//                log.debug("[Token] {} {} {}", tokenClaims.getUserId(), tokenClaims.getUserType(), request.getRequestURL());
-//                log.debug("[Token] {}", jwtToken);
-//            }
-//        } else {
-////            log.debug("JWT Token does not begin with Bearer String");
-//        }
         chain.doFilter(request, response);
     }
 

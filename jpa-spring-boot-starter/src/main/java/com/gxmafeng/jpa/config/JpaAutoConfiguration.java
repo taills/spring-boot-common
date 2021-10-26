@@ -18,7 +18,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.Map;
-
+/**
+ * @author taills
+ * @date 2019/05/01
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"com.gxmafeng.jpa.repository"})
