@@ -1,10 +1,25 @@
 stages:
   - build
+  - release
 build:
   stage: build
+  except:
+    - tags
   tags:
     - Shell
   script:
     - pwd
-    - mvn clean package deploy -U
-  allow_failure: false
+    - mvn clean package install deploy -U
+
+release:
+  stage: release
+  tags:
+    - Shell
+  only:
+    - tags
+  script:
+    - pwd
+    - mvn clean
+    - echo "准备构建 ${CI_COMMIT_TAG}"
+    - mvn versions:set -DnewVersion=$CI_COMMIT_TAG -DgenerateBackupPoms=false
+    - mvn clean package install deploy -U
