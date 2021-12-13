@@ -38,11 +38,11 @@ spring:
 
 # ===== 自定义swagger配置 ===== #
 swagger:
-  group-name: Taills Common Project
   enable: true
-  application-name: Taills Common Project
+  application-name: Common API
   application-version: 1.0
-  application-description: Taills's Spring Boot Project Common
+  group-name: ${swagger.application-name}
+  application-description: ${swagger.application-name}
   contact:
     name: Taills
     email: taills@qq.com

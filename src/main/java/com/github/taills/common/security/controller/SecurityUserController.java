@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @ApiResponseBody
 @RestController
 @RequestMapping("/security/user")
-public class UserController extends BaseController<SecurityUser, Long> {
+public class SecurityUserController extends BaseController<SecurityUser, Long> {
 
     private final SecurityUserService securityUserService;
 
-    public UserController(SecurityUserService service) {
+    public SecurityUserController(SecurityUserService service) {
         init(service);
         this.securityUserService = service;
     }
