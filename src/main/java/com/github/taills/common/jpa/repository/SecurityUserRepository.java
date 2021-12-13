@@ -22,12 +22,4 @@ public interface SecurityUserRepository extends BaseRepository<SecurityUser, Str
      */
     Optional<SecurityUser> findByUsername(String username);
 
-    /**
-     * 查找手机号为... 的 记录
-     *
-     * @param mobile
-     * @return
-     */
-    Optional<SecurityUser> findByMobile(String mobile);
-
 }

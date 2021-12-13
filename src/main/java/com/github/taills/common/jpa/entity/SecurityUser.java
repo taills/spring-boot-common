@@ -51,23 +51,6 @@ public class SecurityUser extends BaseEntity implements Serializable {
     @Column(name = "nickname", nullable = true, length = 64)
     private String nickname;
 
-    /**
-     * 手机号
-     * nullable : false
-     * default  : null
-     */
-    @ApiModelProperty(value = "手机号")
-    @Column(name = "mobile", nullable = true, length = 12)
-    private String mobile;
-
-    /**
-     * 头像 URL
-     * nullable : false
-     * default  : null
-     */
-    @ApiModelProperty(value = "头像 URL")
-    @Column(name = "avatar_url", nullable = true, length = 256)
-    private String avatarUrl;
 
     /**
      * 密码

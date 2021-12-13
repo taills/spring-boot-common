@@ -4,13 +4,9 @@ import com.github.taills.common.annotation.ApiResponseBody;
 import com.github.taills.common.jpa.entity.SecurityUser;
 import com.github.taills.common.jpa.service.SecurityUserService;
 import com.github.taills.common.response.ApiResult;
-import com.github.taills.common.security.model.VoUserLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -30,13 +26,9 @@ public class AuthenticationController {
     private SecurityUserService userService;
 
     @PostMapping("/login")
-    public ApiResult login(@RequestBody VoUserLogin voUserLogin) {
+    public ApiResult login(@RequestParam("username") String username, @RequestParam("password") String password) {
         Optional<SecurityUser> optional = Optional.empty();
-        if (!voUserLogin.getUsername().isEmpty() && !voUserLogin.getPassword().isEmpty()) {
-            optional = this.userService.verifyUsernameAndPassword(voUserLogin.getUsername(), voUserLogin.getPassword());
-        } else if (!voUserLogin.getMobile().isEmpty() && !voUserLogin.getPassword().isEmpty()) {
-            optional = this.userService.verifyMobileAndPassword(voUserLogin.getMobile(), voUserLogin.getPassword());
-        }
+        optional = this.userService.verifyUsernameAndPassword(username, password);
         log.debug("optional = {}", optional);
         if (optional.isPresent()) {
             return ApiResult.success(this.userService.issueToken(optional.get()));

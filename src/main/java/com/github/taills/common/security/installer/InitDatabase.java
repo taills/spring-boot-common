@@ -88,7 +88,6 @@ public class InitDatabase {
 
         uEmpty.setUsername("empty");
         uEmpty.setPassword("123456");
-        uEmpty.setMobile("13700000001");
         uEmpty.setNickname("空用户");
         uEmpty.setRoles(otherRoles);
 
@@ -98,7 +97,6 @@ public class InitDatabase {
         SecurityUser uRoot = new SecurityUser();
         uRoot.setUsername("root");
         uRoot.setPassword("123456");
-        uRoot.setMobile("13700000000");
         uRoot.setNickname("Root");
         uRoot.setRoles(otherRoles);
         Set<SecurityGroup> rootGroups = new HashSet<>();
@@ -111,7 +109,6 @@ public class InitDatabase {
 
         uAdmin.setUsername("admin");
         uAdmin.setPassword("123456");
-        uAdmin.setMobile("13700000010");
         uAdmin.setNickname("Admin");
         uAdmin.setRoles(otherRoles);
         Set<SecurityGroup> rootAdmin = new HashSet<>();
@@ -124,14 +121,12 @@ public class InitDatabase {
 
         uUser.setUsername("user");
         uUser.setPassword("123456");
-        uUser.setMobile("13700000011");
         uUser.setNickname("User");
         uUser.setRoles(otherRoles);
         Set<SecurityGroup> g = new HashSet<>();
         g.add(userGroup);
         uUser.setGroups(g);
         this.userService.save(uUser);
-
 
     }
 }

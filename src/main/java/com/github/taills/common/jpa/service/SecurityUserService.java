@@ -62,11 +62,6 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
         return rep.findByUsername(username);
     }
 
-    @Cacheable(key = "'M-' + #mobile")
-    public Optional<SecurityUser> findByMobile(String mobile) {
-        return rep.findByMobile(mobile);
-    }
-
     /**
      * 校验 SecurityUser 对象的密码
      *
@@ -92,17 +87,6 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      */
     public Optional<SecurityUser> verifyUsernameAndPassword(String username, String rawPassword) {
         return this.verifyPassword(self.findByUsername(username), rawPassword);
-    }
-
-    /**
-     * 校验手机号 + 密码
-     *
-     * @param mobile
-     * @param rawPassword
-     * @return
-     */
-    public Optional<SecurityUser> verifyMobileAndPassword(String mobile, String rawPassword) {
-        return this.verifyPassword(self.findByMobile(mobile), rawPassword);
     }
 
     /**

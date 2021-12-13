@@ -3,8 +3,6 @@ create table if not exists security_user
     id           varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment 'ID',
     username     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment '用户名',
     nickname     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment '昵称',
-    mobile       varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci comment '手机号',
-    avatar_url   varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci comment '头像 URL',
     password     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment '密码',
     expired_at   datetime default '2099-12-31 00:00:00' comment '过期时间',
     is_locked    boolean  default false comment '是否锁定',
@@ -15,7 +13,6 @@ create table if not exists security_user
     primary key (id),
     index pk_id (id, is_deleted),
     index idx_nickname (nickname, is_deleted),
-    unique idx_mobile (mobile, is_deleted),
     unique idx_username (username, is_deleted),
     index idx_gmt_create (gmt_create)
 ) ENGINE = InnoDB
