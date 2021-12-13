@@ -90,6 +90,21 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     }
 
     /**
+     * 根据用户名颁发令牌
+     *
+     * @param username
+     * @return
+     */
+    public String issueToken(String username) {
+        Optional<SecurityUser> optionalSecurityUser = this.findByUsername(username);
+        if (optionalSecurityUser.isPresent()) {
+            return issueToken(optionalSecurityUser.get());
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 颁发令牌
      *
      * @param securityUser
