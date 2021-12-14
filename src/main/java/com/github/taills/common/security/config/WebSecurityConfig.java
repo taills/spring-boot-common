@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/v3/api-docs/**",
                         "/installer/**"
                 ).hasIpAddress("127.0.0.1")
-                .antMatchers("/security/login"
+                .antMatchers("/**/login"
                 ).permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntrance).and().sessionManagement()
