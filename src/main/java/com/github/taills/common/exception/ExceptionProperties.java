@@ -1,18 +1,16 @@
 package com.github.taills.common.exception;
 
-import com.google.common.base.Charsets;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.EncodedResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -24,7 +22,7 @@ import java.util.Properties;
  * @Author nil
  * @Date 2021/12/17 3:59 PM
  **/
-@Configuration
+@Component
 @Slf4j
 public class ExceptionProperties {
 
@@ -32,10 +30,17 @@ public class ExceptionProperties {
 
     @PostConstruct
     void init() throws IOException {
-        EncodedResource resource = new EncodedResource(new ClassPathResource("/exception.properties"), Charsets.UTF_8);
-        log.info("异常代码配置路径 {} ", resource.getResource().getFile().getAbsolutePath());
-        Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-        properties.keySet().forEach(key -> error.put(Integer.parseInt(key.toString()), properties.getProperty((String) key)));
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource[] resources = resolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "/exception*.properties");
+        for (Resource resource : resources) {
+            try (InputStreamReader isr = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
+                Properties properties = new Properties();
+                properties.load(isr);
+                properties.keySet().forEach(key -> error.put(Integer.parseInt(key.toString()), properties.getProperty((String) key)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         log.info("加载异常代码：{}", error);
     }
 

@@ -36,7 +36,7 @@ public class AuthenticationController {
         if (optional.isPresent()) {
             return ApiResult.success(this.userService.issueToken(optional.get()));
         } else {
-            throw exceptionManager.create(90012);
+            throw exceptionManager.create(1001);
         }
     }
 }
