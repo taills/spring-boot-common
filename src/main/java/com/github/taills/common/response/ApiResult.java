@@ -77,7 +77,7 @@ public class ApiResult<T> {
      * @return
      */
     public static <T> ApiResult<T> failure() {
-        return new ApiResult<T>(ApiResultStatus.INTERNAL_SERVER_ERROR, null);
+        return new ApiResult<T>(ApiResultStatus.BAD_REQUEST, null);
     }
 
     /**

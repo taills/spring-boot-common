@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class BaseException extends RuntimeException{
+public class BaseException extends RuntimeException {
 
     private ApiResult apiResult;
 
@@ -23,5 +23,9 @@ public class BaseException extends RuntimeException{
     public BaseException(Throwable cause, ApiResult apiResult) {
         super(cause);
         this.apiResult = apiResult;
+    }
+
+    public BaseException(Integer code, String msg) {
+        this.apiResult = ApiResult.failure(code, msg);
     }
 }
