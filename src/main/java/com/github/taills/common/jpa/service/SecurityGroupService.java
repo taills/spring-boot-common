@@ -1,11 +1,13 @@
 package com.github.taills.common.jpa.service;
 
 import com.github.taills.common.jpa.entity.SecurityGroup;
+import com.github.taills.common.jpa.entity.SecurityRole;
 import com.github.taills.common.jpa.repository.SecurityGroupRepository;
 
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 /**
  * SecurityGroup service层

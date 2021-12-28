@@ -5,6 +5,7 @@ import com.github.taills.common.exception.ExceptionManager;
 import com.github.taills.common.jpa.entity.SecurityUser;
 import com.github.taills.common.jpa.service.SecurityUserService;
 import com.github.taills.common.response.ApiResult;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,12 @@ import java.util.Optional;
 @ApiResponseBody
 @RequestMapping("/security")
 @Slf4j
+@Api(tags = {"用户登录"})
 public class AuthenticationController {
 
     @Autowired
     private SecurityUserService userService;
 
-    @Autowired
-    private ExceptionManager exceptionManager;
 
     @PostMapping("/login")
     public ApiResult login(@RequestParam("username") String username, @RequestParam("password") String password) {
@@ -36,7 +36,7 @@ public class AuthenticationController {
         if (optional.isPresent()) {
             return ApiResult.success(this.userService.issueToken(optional.get()));
         } else {
-            throw exceptionManager.create(1001);
+            throw ExceptionManager.create(1001);
         }
     }
 }

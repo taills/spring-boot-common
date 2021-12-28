@@ -3,6 +3,7 @@ package com.github.taills.common.security.filter;
 import com.github.taills.common.jpa.service.SecurityUserService;
 import com.github.taills.common.security.userdetails.SecurityUserDetails;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -31,10 +32,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        Optional<SecurityUserDetails> optionalSecurityUserDetails = this.securityUserService.parseToken(request.getHeader("Authorization"));
+        String token = request.getHeader("Authorization");
+        Optional<SecurityUserDetails> optionalSecurityUserDetails = this.securityUserService.parseToken(token);
         if (optionalSecurityUserDetails.isPresent()) {
             //解析成功， setAuthentication 相关凭证
-            SecurityContextHolder.getContext().setAuthentication(optionalSecurityUserDetails.get().getAuthentication());
+            Authentication authentication = optionalSecurityUserDetails.get().getAuthentication();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             log.debug("Token 解析失败");
         }

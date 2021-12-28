@@ -11,4 +11,10 @@ import com.github.taills.common.jpa.entity.SecurityGroup;
  */
 public interface SecurityGroupRepository extends BaseRepository<SecurityGroup, String> {
 
+    /**
+     * 根据 groupName 统计条数，正常情况下只会有 1 和 0
+     * @param groupName
+     * @return
+     */
+    long countAllByGroupName(String groupName);
 }

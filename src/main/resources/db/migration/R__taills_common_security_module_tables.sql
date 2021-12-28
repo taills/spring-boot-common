@@ -11,9 +11,9 @@ create table if not exists security_user
     gmt_modified datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP comment '修改时间',
     is_deleted   boolean  default false comment '是否删除',
     primary key (id),
-    index pk_id (id, is_deleted),
+    unique pk_username (username),
     index idx_nickname (nickname, is_deleted),
-    unique idx_username (username, is_deleted),
+    index idx_username (username, is_deleted),
     index idx_gmt_create (gmt_create)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -28,6 +28,7 @@ create table if not exists security_group
     gmt_modified datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP comment '修改时间',
     is_deleted   boolean  default false comment '是否删除',
     primary key (id),
+    unique unique_group_name (group_name),
     index pk_id (id, is_deleted),
     index idx_parent_id (parent_id, is_deleted),
     index idx_group_name (group_name, is_deleted)
@@ -45,8 +46,8 @@ create table if not exists security_role
     gmt_modified datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP comment '修改时间',
     is_deleted   boolean  default false comment '是否删除',
     primary key (id),
-    index pk_id (id, is_deleted),
-    index idx_role_name (role_name, is_deleted)
+    unique pk_role_name (role_name),
+    index idx_role_name (role_name)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
     comment '角色';

@@ -10,5 +10,10 @@ import com.github.taills.common.jpa.entity.SecurityRole;
  * @date 2021-10-24 13:56:40
  */
 public interface SecurityRoleRepository extends BaseRepository<SecurityRole, String> {
-
+    /**
+     * 统计 roleName，只有0 或 1　
+     * @param roleName
+     * @return
+     */
+    long countAllByRoleName(String roleName);
 }

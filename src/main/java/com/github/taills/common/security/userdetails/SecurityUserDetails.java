@@ -19,14 +19,12 @@ public class SecurityUserDetails implements UserDetails {
 
     private SecurityUser securityUser;
 
-    private String token;
-
     private List<GrantedAuthority> authorities;
 
     private final String rolePrefix = "ROLE_";
 
     public Authentication getAuthentication() {
-        return new UsernamePasswordAuthenticationToken(this.securityUser.getUsername(), this.token, this.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(this.securityUser.getUsername(), this.securityUser, this.getAuthorities());
     }
 
     /**
@@ -102,14 +100,6 @@ public class SecurityUserDetails implements UserDetails {
 
     public void setSecurityUser(SecurityUser securityUser) {
         this.securityUser = securityUser;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public void setAuthorities(List<GrantedAuthority> authorities) {

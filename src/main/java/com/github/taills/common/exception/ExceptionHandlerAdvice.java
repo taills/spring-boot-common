@@ -5,6 +5,7 @@ import com.github.taills.common.response.ApiResultStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +30,9 @@ public class ExceptionHandlerAdvice {
     public ApiResult handleException(Exception e) {
         if (e instanceof HttpRequestMethodNotSupportedException) {
             return ApiResult.failure(ApiResultStatus.METHOD_NOT_ALLOWED);
+        }
+        if (e instanceof MissingServletRequestParameterException){
+            return ApiResult.failure(ApiResultStatus.BAD_REQUEST);
         }
         log.error("handleException {}", e.getLocalizedMessage());
         return ApiResult.failure(ApiResultStatus.INTERNAL_SERVER_ERROR, e.getClass().getName());

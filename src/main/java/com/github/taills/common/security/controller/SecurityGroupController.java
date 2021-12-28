@@ -4,6 +4,7 @@ import com.github.taills.common.controller.BaseController;
 import com.github.taills.common.jpa.entity.SecurityGroup;
 import com.github.taills.common.jpa.service.SecurityGroupService;
 import com.github.taills.common.annotation.ApiResponseBody;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -51,5 +51,8 @@ swagger:
 
 logging:
   level:
-    root: info
-    com.github.taills: debug
+    root: WARN
+    com:
+      github:
+        taills: DEBUG
+
