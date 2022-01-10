@@ -46,14 +46,13 @@ public class ExceptionHandlerAdvice {
      */
     @ExceptionHandler(RuntimeException.class)
     public ApiResult handleRuntimeException(RuntimeException e) {
-
         if (e instanceof AccessDeniedException) {
             return ApiResult.failure(ApiResultStatus.FORBIDDEN);
         }
         if (e instanceof BaseException){
             return ((BaseException) e).getApiResult();
         }
-        log.error("handleRuntimeException {}", e.getLocalizedMessage());
+        log.error("RuntimeException {}", e.getLocalizedMessage());
         return ApiResult.failure(ApiResultStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -65,7 +64,7 @@ public class ExceptionHandlerAdvice {
      */
     @ExceptionHandler(BaseException.class)
     public ApiResult handleBaseException(BaseException e) {
-        log.error("handleBaseException {}", e.getLocalizedMessage());
+        log.error("BaseException {}", e.getApiResult());
         return e.getApiResult();
     }
 }
