@@ -16,9 +16,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 /**
  * SecurityRole service层
@@ -60,5 +58,16 @@ public class SecurityRoleService extends AbstractService<SecurityRole, String> {
             securityRole = this.save(securityRole);
             log.debug("插入 SecurityRole {} {}", roleName, description);
         }
+    }
+
+    /**
+     * 获取管理员的角色
+     * @return
+     */
+    public List<SecurityRole> getAdminRoles(){
+        SecurityRole securityRole = new SecurityRole();
+        securityRole.setRoleName("ADMIN");
+        ExampleMatcher stringMatcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
+        return rep.findAll(Example.of(securityRole,stringMatcher));
     }
 }

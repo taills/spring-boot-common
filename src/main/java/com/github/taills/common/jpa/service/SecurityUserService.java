@@ -56,6 +56,10 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     @Autowired
     private SecurityUserService self;
 
+    @Autowired
+    private SecurityRoleService securityRoleService;
+
+
 
     @Cacheable(key = "'U-' + #username")
     public Optional<SecurityUser> findByUsername(String username) {
@@ -183,5 +187,15 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
             }
         });
         return super.saveAll(list);
+    }
+
+    /**
+     * 把用户注册为管理员
+     * @param user
+     * @return
+     */
+    public SecurityUser registerAdmin(SecurityUser user){
+        user.setRoles(new HashSet<>(securityRoleService.getAdminRoles()));
+        return self.save(user);
     }
 }
