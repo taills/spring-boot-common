@@ -4,10 +4,6 @@ spring:
   main:
     lazy-initialization: false
     # 上面的为 true 时，swagger 不显示ApiModule
-  security:
-    user:
-      name: user
-      password: user
   mvc:
     hiddenmethod:
       filter:
