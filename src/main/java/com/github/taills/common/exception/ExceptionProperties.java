@@ -45,7 +45,6 @@ public class ExceptionProperties {
     }
 
     public String msg(Integer code) {
-        log.debug("获取异常代码对应的描述信息 {}", code);
         return this.error.get(code) != null ? this.error.get(code) : "未知异常: " + code;
     }
 
