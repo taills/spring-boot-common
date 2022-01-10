@@ -2,6 +2,7 @@ package com.github.taills.common.annotation;
 
 
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.annotation.*;
 
@@ -12,7 +13,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.METHOD})
 @Documented
-@ResponseBody
+@RestController
 public @interface ApiResponseBody {
 
 }
