@@ -6,10 +6,10 @@
     <parent>
         <groupId>io.github.taills</groupId>
         <artifactId>spring-boot-parent</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
     </parent>
 
-    <groupId>com.github.taills</groupId>
+    <groupId>io.github.taills</groupId>
     <artifactId>spring-boot-common</artifactId>
     <version>1.2-SNAPSHOT</version>
     <name>Spring Boot Common</name>
@@ -18,19 +18,6 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>${public.repositoryId}</id>
-            <url>${public.repo.url}</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -157,10 +144,6 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
