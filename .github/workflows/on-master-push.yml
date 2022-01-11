@@ -1,0 +1,29 @@
+name: 主分支推送😄
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-publsh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Apache Maven Central
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+          server-id: ossrh
+          server-username: NEXUS_USERNAME # env variable for username in deploy
+          server-password: NEXUS_PASSWORD # env variable for token in deploy
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
+
+      - name: Publish to Apache Maven Central
+        run: mvn clean deploy
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
