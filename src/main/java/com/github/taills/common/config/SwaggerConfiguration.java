@@ -2,15 +2,17 @@ package com.github.taills.common.config;
 
 
 import com.github.taills.common.annotation.ApiResponseBody;
+import com.github.taills.common.filter.SwaggerJavascriptHookFilter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.core.io.Resource;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -28,11 +30,20 @@ import java.util.List;
  * @Author nil
  * @Date 2021/10/21 9:51 下午
  **/
-@EnableOpenApi
 @Configuration
 @Slf4j
 public class SwaggerConfiguration {
     private final SwaggerProperties swaggerProperties;
+
+    @Value("classpath:/META-INF/resources/webjars/springfox-swagger-ui/springfox.js")
+    private Resource springfoxJs;
+
+    @Value("classpath:/springfox-append.js")
+    private Resource springfoxAppendJs;
+
+
+    @Autowired
+    private SwaggerJavascriptHookFilter swaggerJavascriptHookFilter;
 
     public SwaggerConfiguration(SwaggerProperties swaggerProperties) {
         this.swaggerProperties = swaggerProperties;
@@ -84,5 +95,17 @@ public class SwaggerConfiguration {
         List<SecurityReference> securityReferences = new ArrayList<>();
         securityReferences.add(new SecurityReference("Authorization", authorizationScopes));
         return securityReferences;
+    }
+
+    /**
+     * 拦截 swagger 的js 内容，附加一段js，用于保存/读取 token with localStorage
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean hookSwaggerJsFile() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.addUrlPatterns("/swagger-ui/springfox.js");
+        filterRegistrationBean.setFilter(swaggerJavascriptHookFilter);
+        return filterRegistrationBean;
     }
 }
