@@ -2,7 +2,7 @@ name: 主分支推送😄
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   build-and-publsh:
     runs-on: ubuntu-latest
