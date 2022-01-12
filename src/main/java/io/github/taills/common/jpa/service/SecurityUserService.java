@@ -1,8 +1,7 @@
 package io.github.taills.common.jpa.service;
 
-import io.github.taills.common.jpa.repository.SecurityUserRepository;
 import io.github.taills.common.jpa.entity.SecurityUser;
-
+import io.github.taills.common.jpa.repository.SecurityUserRepository;
 import io.github.taills.common.security.userdetails.SecurityUserDetails;
 import io.github.taills.common.util.SnowFlake;
 import io.jsonwebtoken.Claims;
@@ -50,12 +49,6 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     @Resource
     private SecurityUserRepository rep;
 
-    /**
-     * 注入自己的原因在于，直接使用 this 调用方法，无法触发 @Cacheable 注解的缓存功能
-     */
-    @Autowired
-    private SecurityUserService self;
-
     @Autowired
     private SecurityRoleService securityRoleService;
 
@@ -90,7 +83,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      * @return
      */
     public Optional<SecurityUser> verifyUsernameAndPassword(String username, String rawPassword) {
-        return this.verifyPassword(self.findByUsername(username), rawPassword);
+        return this.verifyPassword(findByUsername(username), rawPassword);
     }
 
     /**
@@ -155,7 +148,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
                     //claims.getId()
                     log.debug("JTI {}", claims.getId());
                     //查找
-                    Optional<SecurityUser> optionalSecurityUser = self.findByUsername(claims.getSubject());
+                    Optional<SecurityUser> optionalSecurityUser = findByUsername(claims.getSubject());
                     if (optionalSecurityUser.isPresent()) {
                         return Optional.of(SecurityUserDetails.fromSecurityUser(optionalSecurityUser.get()));
                     }
@@ -196,6 +189,6 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      */
     public SecurityUser registerAdmin(SecurityUser user){
         user.setRoles(new HashSet<>(securityRoleService.getAdminRoles()));
-        return self.save(user);
+        return save(user);
     }
 }
