@@ -15,6 +15,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '8'
+          cache: 'maven'
           server-id: ossrh
           server-username: NEXUS_USERNAME # env variable for username in deploy
           server-password: NEXUS_PASSWORD # env variable for token in deploy
@@ -22,7 +23,7 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
 
       - name: Publish to Apache Maven Central
-        run: mvn clean deploy
+        run: mvn clean install deploy
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}

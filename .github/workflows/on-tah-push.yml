@@ -19,6 +19,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '8'
+          cache: 'maven'
           server-id: ossrh
           server-username: NEXUS_USERNAME # env variable for username in deploy
           server-password: NEXUS_PASSWORD # env variable for token in deploy
@@ -29,7 +30,7 @@ jobs:
         run: mvn versions:set -DnewVersion=${{ steps.get_tag_name.outputs.TAG_NAME }} -DgenerateBackupPoms=false
 
       - name: Publish to Apache Maven Central
-        run: mvn --batch-mode clean deploy -Pdeploy-to-central
+        run: mvn --batch-mode clean install deploy -Pdeploy-to-central
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
