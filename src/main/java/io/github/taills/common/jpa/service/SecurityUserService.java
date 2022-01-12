@@ -2,6 +2,7 @@ package io.github.taills.common.jpa.service;
 
 import io.github.taills.common.jpa.entity.SecurityUser;
 import io.github.taills.common.jpa.repository.SecurityUserRepository;
+import io.github.taills.common.security.properties.JwtProperties;
 import io.github.taills.common.security.userdetails.SecurityUserDetails;
 import io.github.taills.common.util.SnowFlake;
 import io.jsonwebtoken.Claims;
@@ -29,19 +30,21 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "SecurityUserService")
 public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final JwtProperties jwtProperties;
+
+    private final PasswordEncoder passwordEncoder;
 
     private final String tokenPrefix = "Bearer ";
 
-    /**
-     * JWT 私钥
-     */
-    private final String JWT_KEY = "wcgEg550LUsrsvas7SVXkE5bwo9zcG7eB0wBxHlW5XK3Xep9AYsvO8wuxekhpbzwmlJXxr2WCrBhlrXt3R0";
-    /**
-     * JWT 有效期 毫秒
-     */
-    private final int JWT_INDATE = 1000 * 60 * 60 * 24;
+    public SecurityUserService(JwtProperties jwtProperties,PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+        if (null == jwtProperties.getKey() || jwtProperties.getKey().isEmpty()){
+            jwtProperties = new JwtProperties();
+            jwtProperties.setKey("this is default jwt key.");
+            jwtProperties.setLifeTime(60*60*24);
+        }
+        this.jwtProperties = jwtProperties;
+    }
 
     /**
      * JPA Repository
@@ -51,7 +54,6 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
     @Autowired
     private SecurityRoleService securityRoleService;
-
 
 
     @Cacheable(key = "'U-' + #username")
@@ -118,7 +120,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      * @return
      */
     public String issueToken(SecurityUserDetails userDetails) {
-        Date exp = new Date(System.currentTimeMillis() + JWT_INDATE);
+        Date exp = new Date(System.currentTimeMillis() + jwtProperties.getLifeTime() * 1000);
         Date now = new Date(System.currentTimeMillis());
         Set<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet());
         String token = Jwts.builder().setSubject(userDetails.getUsername())
@@ -127,7 +129,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
                 .setIssuer("JWT")
                 .setExpiration(exp)
                 .setId(SnowFlake.get().nextSid())
-                .setExpiration(exp).signWith(SignatureAlgorithm.HS512, JWT_KEY).compact();
+                .setExpiration(exp).signWith(SignatureAlgorithm.HS512, jwtProperties.getKey()).compact();
         return token;
     }
 
@@ -142,7 +144,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
         if (httpHeaderToken != null && httpHeaderToken.length() > tokenPrefix.length() && httpHeaderToken.startsWith(tokenPrefix)) {
             try {
                 String token = httpHeaderToken.substring(7);
-                Claims claims = Jwts.parser().setSigningKey(JWT_KEY).parseClaimsJws(token).getBody();
+                Claims claims = Jwts.parser().setSigningKey(jwtProperties.getKey()).parseClaimsJws(token).getBody();
                 if (claims.getIssuedAt().before(now) && claims.getExpiration().after(now)) {
                     //校验 jti
                     //claims.getId()
@@ -184,10 +186,11 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
     /**
      * 把用户注册为管理员
+     *
      * @param user
      * @return
      */
-    public SecurityUser registerAdmin(SecurityUser user){
+    public SecurityUser registerAdmin(SecurityUser user) {
         user.setRoles(new HashSet<>(securityRoleService.getAdminRoles()));
         return save(user);
     }
