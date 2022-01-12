@@ -38,7 +38,7 @@ create table user
 ```
 ### 代码生成脚本
 
-生成代码时选择包路径为 `com.github.taills.jpa`
+生成代码时选择包路径为 `io.github.taills.jpa`
 
 成功会生成`3` 个文件夹 `entity` `repository` `service`
 

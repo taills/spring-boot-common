@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.github.taills.common.jpa.repository", "com.github.taills.jpa.repository"})
+@EnableJpaRepositories(basePackages = {"io.github.taills.common.jpa.repository", "io.github.taills.jpa.repository"})
 @ConditionalOnBean(value = DataSource.class)
 public class JpaAutoConfiguration {
 
@@ -48,7 +48,7 @@ public class JpaAutoConfiguration {
         return builder
                 .dataSource(dataSource)
                 .properties(getVendorProperties())
-                .packages("com.github.taills.common.jpa.repository", "com.github.taills.jpa.repository")
+                .packages("io.github.taills.common.jpa.repository", "io.github.taills.jpa.repository")
                 .persistenceUnit("primaryPersistenceUnit")
                 .build();
     }

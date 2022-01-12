@@ -67,7 +67,7 @@ public class SwaggerConfiguration {
                 .groupName(this.swaggerProperties.getGroupName())
                 .select()
                 //apis： 添加swagger接口提取范围
-//                .apis(RequestHandlerSelectors.basePackage("com.github.taills"))
+//                .apis(RequestHandlerSelectors.basePackage("io.github.taills"))
                 .apis(RequestHandlerSelectors.withClassAnnotation(ApiResponseBody.class))
                 .paths(PathSelectors.any())
                 .build()
