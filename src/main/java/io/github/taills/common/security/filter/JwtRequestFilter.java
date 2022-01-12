@@ -38,8 +38,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             //解析成功， setAuthentication 相关凭证
             Authentication authentication = optionalSecurityUserDetails.get().getAuthentication();
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else {
-            log.debug("Token 解析失败");
         }
         chain.doFilter(request, response);
     }

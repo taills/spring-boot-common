@@ -2,6 +2,7 @@ package io.github.taills.common.jpa.service;
 
 import io.github.taills.common.jpa.entity.SecurityUser;
 import io.github.taills.common.jpa.repository.SecurityUserRepository;
+import io.github.taills.common.security.jti.JtiService;
 import io.github.taills.common.security.properties.JwtProperties;
 import io.github.taills.common.security.userdetails.SecurityUserDetails;
 import io.github.taills.common.util.SnowFlake;
@@ -34,9 +35,11 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final JtiService jtiService;
+
     private final String tokenPrefix = "Bearer ";
 
-    public SecurityUserService(JwtProperties jwtProperties,PasswordEncoder passwordEncoder){
+    public SecurityUserService(JwtProperties jwtProperties,PasswordEncoder passwordEncoder,JtiService jtiService){
         this.passwordEncoder = passwordEncoder;
         if (null == jwtProperties.getKey() || jwtProperties.getKey().isEmpty()){
             jwtProperties = new JwtProperties();
@@ -44,6 +47,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
             jwtProperties.setLifeTime(60*60*24);
         }
         this.jwtProperties = jwtProperties;
+        this.jtiService = jtiService;
     }
 
     /**
@@ -142,23 +146,22 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     public Optional<SecurityUserDetails> parseToken(String httpHeaderToken) {
         Date now = new Date();
         if (httpHeaderToken != null && httpHeaderToken.length() > tokenPrefix.length() && httpHeaderToken.startsWith(tokenPrefix)) {
-            try {
-                String token = httpHeaderToken.substring(7);
-                Claims claims = Jwts.parser().setSigningKey(jwtProperties.getKey()).parseClaimsJws(token).getBody();
-                if (claims.getIssuedAt().before(now) && claims.getExpiration().after(now)) {
-                    //校验 jti
-                    //claims.getId()
-                    log.debug("JTI {}", claims.getId());
+            String token = httpHeaderToken.substring(7);
+            Claims claims = Jwts.parser().setSigningKey(jwtProperties.getKey()).parseClaimsJws(token).getBody();
+            if (claims.getIssuedAt().before(now) && claims.getExpiration().after(now)) {
+                //校验 jti 是否被撤销了
+                if (!jtiService.isRevoked(claims.getId())){
                     //查找
                     Optional<SecurityUser> optionalSecurityUser = findByUsername(claims.getSubject());
                     if (optionalSecurityUser.isPresent()) {
                         return Optional.of(SecurityUserDetails.fromSecurityUser(optionalSecurityUser.get()));
                     }
+                }else {
+                    log.debug("{} 该 token 已被撤销",claims.getId());
                 }
-            } catch (Exception e) {
-                log.debug("Token 解析失败 {}", e.getLocalizedMessage());
+            } else {
+                log.debug("{} 该 token 已于 {} 过期",claims.getId(),claims.getExpiration());
             }
-
         }
         return Optional.empty();
     }
