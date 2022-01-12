@@ -48,7 +48,7 @@ swagger:
 logging:
   level:
     root: WARN
-    com:
+    io:
       github:
         taills: DEBUG
 
