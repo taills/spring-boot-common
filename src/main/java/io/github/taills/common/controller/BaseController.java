@@ -68,7 +68,7 @@ public class BaseController<T extends BaseEntity, ID> {
     @PreAuthorize("hasRole('ADMIN_READ')")
     public List<T> read(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
                         @RequestParam(name = "pageSize", required = false, defaultValue = "100") Integer pageSize,
-                        @RequestParam(name = "pageNo", required = false, defaultValue = "false") Boolean isOrderByIdAsc) {
+                        @RequestParam(name = "isOrderByIdAsc", required = false, defaultValue = "true") boolean isOrderByIdAsc) {
         Sort sort = Sort.by("id");
         return this.baseService.findAll(
                 PageRequest.of(pageNo,
