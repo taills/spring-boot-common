@@ -31,7 +31,10 @@ spring:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
     default-property-inclusion: non_null
-
+  task:
+    scheduling:
+      pool:
+        size: 10
 common:
   jwt:
     key: ZGdacn4IxhfzG9Td5Y99FlM1bIFNiE0k7PL7cuNLlTDMbGyEVh5a3WSijNhAMpfz9GSOAy6HaDVhAQoUG8YfqimX53zqFnUHY
