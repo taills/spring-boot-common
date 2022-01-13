@@ -39,12 +39,12 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
     private final String tokenPrefix = "Bearer ";
 
-    public SecurityUserService(JwtProperties jwtProperties,PasswordEncoder passwordEncoder,JtiService jtiService){
+    public SecurityUserService(JwtProperties jwtProperties, PasswordEncoder passwordEncoder, JtiService jtiService) {
         this.passwordEncoder = passwordEncoder;
-        if (null == jwtProperties.getKey() || jwtProperties.getKey().isEmpty()){
+        if (null == jwtProperties.getKey() || jwtProperties.getKey().isEmpty()) {
             jwtProperties = new JwtProperties();
             jwtProperties.setKey("this is default jwt key.");
-            jwtProperties.setLifeTime(60*60*24);
+            jwtProperties.setLifeTime(60 * 60 * 24);
         }
         this.jwtProperties = jwtProperties;
         this.jtiService = jtiService;
@@ -147,21 +147,28 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
         Date now = new Date();
         if (httpHeaderToken != null && httpHeaderToken.length() > tokenPrefix.length() && httpHeaderToken.startsWith(tokenPrefix)) {
             String token = httpHeaderToken.substring(7);
-            Claims claims = Jwts.parser().setSigningKey(jwtProperties.getKey()).parseClaimsJws(token).getBody();
-            if (claims.getIssuedAt().before(now) && claims.getExpiration().after(now)) {
-                //校验 jti 是否被撤销了
-                if (!jtiService.isRevoked(claims.getId())){
-                    //查找
-                    Optional<SecurityUser> optionalSecurityUser = findByUsername(claims.getSubject());
-                    if (optionalSecurityUser.isPresent()) {
-                        return Optional.of(SecurityUserDetails.fromSecurityUser(optionalSecurityUser.get()));
+            try {
+                // token 过期的话，在这一步会抛出一个异常
+                Claims claims = Jwts.parser().setSigningKey(jwtProperties.getKey()).parseClaimsJws(token).getBody();
+                // 所以就不检测这个条件： claims.getExpiration().after(now)
+                if (claims.getIssuedAt().before(now)) {
+                    //校验 jti 是否被撤销了
+                    if (!jtiService.isRevoked(claims.getId())) {
+                        //查找
+                        Optional<SecurityUser> optionalSecurityUser = findByUsername(claims.getSubject());
+                        if (optionalSecurityUser.isPresent()) {
+                            return Optional.of(SecurityUserDetails.fromSecurityUser(optionalSecurityUser.get()));
+                        }
+                    } else {
+                        log.debug("token 已被撤销。 {}", claims.getId());
                     }
-                }else {
-                    log.debug("{} 该 token 已被撤销",claims.getId());
+                } else {
+                    log.debug("token 还未生效，生效时间为 {} 之后。 {}", claims.getIssuedAt(), token);
                 }
-            } else {
-                log.debug("{} 该 token 已于 {} 过期",claims.getId(),claims.getExpiration());
+            } catch (io.jsonwebtoken.ExpiredJwtException expiredJwtException) {
+                log.debug("token 已过期。 {}", token);
             }
+
         }
         return Optional.empty();
     }
