@@ -1,6 +1,5 @@
 package io.github.taills.common.security.jti;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -11,11 +10,10 @@ import java.util.Map;
 /**
  * @ClassName SimpleJtiServiceConfiguration
  * @Description
- * @Author nil
+ * @Author taills
  * @Date 2022/1/12 5:19 PM
  **/
 @Configuration
-@Slf4j
 public class SimpleJtiServiceConfiguration {
 
     @Autowired
