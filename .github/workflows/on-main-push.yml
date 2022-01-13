@@ -12,16 +12,16 @@ jobs:
 
       - name: 配置环境变量
         run: |
-          echo "::set-env name=DB_HOST::localhost"
-          echo "::set-env name=DB_PORT::3306"
-          echo "::set-env name=DB_USER::root"
-          echo "::set-env name=DB_PASSWORD::root"
-          echo "::set-env name=DB_NAME::taills"
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=3306" >> $GITHUB_ENV
+          echo "DB_USER=root" >> $GITHUB_ENV
+          echo "DB_PASSWORD=root" >> $GITHUB_ENV
+          echo "DB_NAME=taills" >> $GITHUB_ENV
 
       - name: 创建数据库
         run: |
-          mysql -u${DB_USER} -p${DB_PASSWORD} -e "create database ${DB_NAME}"
-          mysql -u${DB_USER} -p${DB_PASSWORD} -e "show databases"
+          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} -e "create database ${{ env.DB_NAME }}"
+          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} -e "show databases"
 
       - name: Check out Git repository
         uses: actions/checkout@v2
