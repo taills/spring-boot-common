@@ -39,7 +39,7 @@ public @interface Limit {
      * !!! 有被伪造的风险
      * @return
      */
-    boolean useUserAgent() default false;
+    boolean useUserAgent() default true;
 
     /**
      * 是否使用 X-Forwarded-For 来参与生成 key。
@@ -51,19 +51,19 @@ public @interface Limit {
      * 可过滤掉伪造的 X-Forwarded-For ，相当于在第一层 nginx 转发时，把 remote host 放入 X-Forwarded-For 进行转发。
      * @return
      */
-    boolean useXForwardedFor() default false;
+    boolean useXForwardedFor() default true;
 
     /**
      * 是否使用 Remote Host 来参与生成 key。
      * 这里如果前置有 nginx 的话，拿到的都是 nginx 的 ip。
      * @return
      */
-    boolean useRemoteHost() default false;
+    boolean useRemoteHost() default true;
 
     /**
      * 是否使用 Remote User 来参与生成 key。
      * 用户未登录的情况下，此参数为 null，用户登录的情况下，此参数为 用户名。
      * @return
      */
-    boolean useRemoteUser() default false;
+    boolean useRemoteUser() default true;
 }
