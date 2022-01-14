@@ -5,8 +5,24 @@ on:
       - '*'
 jobs:
   build-and-publsh:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
+      - name: 启动 MySQL 服务
+        run: sudo systemctl start mysql.service
+
+      - name: 配置环境变量
+        run: |
+          echo "MYSQL_HOST=localhost" >> $GITHUB_ENV
+          echo "MYSQL_PORT=3306" >> $GITHUB_ENV
+          echo "MYSQL_USER=root" >> $GITHUB_ENV
+          echo "MYSQL_PASS=root" >> $GITHUB_ENV
+          echo "MYSQL_DATABASE=taills" >> $GITHUB_ENV
+
+      - name: 创建数据库
+        run: |
+          mysql -h ${{ env.MYSQL_HOST }} -P ${{ env.MYSQL_PORT }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASS }} -e "create database ${{ env.MYSQL_DATABASE }}"
+          mysql -h ${{ env.MYSQL_HOST }} -P ${{ env.MYSQL_PORT }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASS }} -e "show databases"
+
       - name: Check out Git repository
         uses: actions/checkout@v2
 

@@ -8,15 +8,19 @@ spring:
     hiddenmethod:
       filter:
         enabled: true #启用Restful 风格 的PUT DELETE 请求方式
+    pathmatch:
+      matching-strategy: ant_path_matcher
+      # 没有上面这个配置的话，swagger 会异常，但据说无法正常使用 actuator
+      # 参考 https://stackoverflow.com/questions/70036953/springboot-2-6-0-spring-fox-3-failed-to-start-bean-documentationpluginsboot
   jpa:
     show-sql: false # 启用后，会在标准输出上输出sql语句
     hibernate:
       ddl-auto: none
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useUnicode=true&allowPublicKeyRetrieval=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?useUnicode=true&allowPublicKeyRetrieval=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASS}
 
   flyway:
     #是否开启flywary，默认true.

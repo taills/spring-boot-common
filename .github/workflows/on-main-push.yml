@@ -12,16 +12,16 @@ jobs:
 
       - name: 配置环境变量
         run: |
-          echo "DB_HOST=localhost" >> $GITHUB_ENV
-          echo "DB_PORT=3306" >> $GITHUB_ENV
-          echo "DB_USER=root" >> $GITHUB_ENV
-          echo "DB_PASSWORD=root" >> $GITHUB_ENV
-          echo "DB_NAME=taills" >> $GITHUB_ENV
+          echo "MYSQL_HOST=localhost" >> $GITHUB_ENV
+          echo "MYSQL_PORT=3306" >> $GITHUB_ENV
+          echo "MYSQL_USER=root" >> $GITHUB_ENV
+          echo "MYSQL_PASS=root" >> $GITHUB_ENV
+          echo "MYSQL_DATABASE=taills" >> $GITHUB_ENV
 
       - name: 创建数据库
         run: |
-          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} -e "create database ${{ env.DB_NAME }}"
-          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} -e "show databases"
+          mysql -h ${{ env.MYSQL_HOST }} -P ${{ env.MYSQL_PORT }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASS }} -e "create database ${{ env.MYSQL_DATABASE }}"
+          mysql -h ${{ env.MYSQL_HOST }} -P ${{ env.MYSQL_PORT }} -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASS }} -e "show databases"
 
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -37,6 +37,9 @@ jobs:
           server-password: NEXUS_PASSWORD # env variable for token in deploy
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: GPG_PASSPHRASE # env variable for GPG private key passphrase
+
+      - name: 单元测试
+        run: mvn test
 
       - name: Publish to Apache Maven Central
         run: mvn clean install deploy
