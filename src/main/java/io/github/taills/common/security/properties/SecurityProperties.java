@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
  * @Date 2022/1/12 3:48 PM
  **/
 @Component
-@ConfigurationProperties(prefix = "common.jwt")
+@ConfigurationProperties(prefix = "common.security")
 @Data
-public class JwtProperties {
+public class SecurityProperties {
     /**
      * JWT 密钥
      */
@@ -22,4 +22,9 @@ public class JwtProperties {
      * 签发 token 的有效时长，单位：秒
      */
     private Integer lifeTime;
+
+    /**
+     * 是否强制二步认证
+     */
+    private boolean mandatoryTwoStepAuthentication;
 }

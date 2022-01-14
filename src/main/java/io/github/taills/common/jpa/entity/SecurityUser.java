@@ -61,6 +61,15 @@ public class SecurityUser extends BaseEntity implements Serializable {
     @Column(name = "password", nullable = true, length = 64)
     private String password;
 
+	/**
+	 * 2FA 密钥
+	 * nullable : true
+	 * default  : null
+	 */
+	@ApiModelProperty(value = "2FA 密钥")
+	@Column(name = "totp_secret", nullable = true, length = 64)
+	private String totpSecret;
+
     /**
      * 过期时间
      * nullable : true

@@ -3,7 +3,7 @@ package io.github.taills.common.jpa.service;
 import io.github.taills.common.jpa.entity.SecurityUser;
 import io.github.taills.common.jpa.repository.SecurityUserRepository;
 import io.github.taills.common.security.jti.JtiService;
-import io.github.taills.common.security.properties.JwtProperties;
+import io.github.taills.common.security.properties.SecurityProperties;
 import io.github.taills.common.security.userdetails.SecurityUserDetails;
 import io.github.taills.common.util.SnowFlake;
 import io.jsonwebtoken.Claims;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "SecurityUserService")
 public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
-    private final JwtProperties jwtProperties;
+    private final SecurityProperties securityProperties;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -39,14 +39,14 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
     private final String tokenPrefix = "Bearer ";
 
-    public SecurityUserService(JwtProperties jwtProperties, PasswordEncoder passwordEncoder, JtiService jtiService) {
+    public SecurityUserService(SecurityProperties securityProperties, PasswordEncoder passwordEncoder, JtiService jtiService) {
         this.passwordEncoder = passwordEncoder;
-        if (null == jwtProperties.getKey() || jwtProperties.getKey().isEmpty()) {
-            jwtProperties = new JwtProperties();
-            jwtProperties.setKey("this is default jwt key.");
-            jwtProperties.setLifeTime(60 * 60 * 24);
+        if (null == securityProperties.getKey() || securityProperties.getKey().isEmpty()) {
+            securityProperties = new SecurityProperties();
+            securityProperties.setKey("this is default jwt key.");
+            securityProperties.setLifeTime(60 * 60 * 24);
         }
-        this.jwtProperties = jwtProperties;
+        this.securityProperties = securityProperties;
         this.jtiService = jtiService;
     }
 
@@ -124,7 +124,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      * @return
      */
     public String issueToken(SecurityUserDetails userDetails) {
-        Date exp = new Date(System.currentTimeMillis() + jwtProperties.getLifeTime() * 1000);
+        Date exp = new Date(System.currentTimeMillis() + securityProperties.getLifeTime() * 1000);
         Date now = new Date(System.currentTimeMillis());
         Set<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet());
         String token = Jwts.builder().setSubject(userDetails.getUsername())
@@ -133,7 +133,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
                 .setIssuer("JWT")
                 .setExpiration(exp)
                 .setId(SnowFlake.get().nextSid())
-                .setExpiration(exp).signWith(SignatureAlgorithm.HS512, jwtProperties.getKey()).compact();
+                .setExpiration(exp).signWith(SignatureAlgorithm.HS512, securityProperties.getKey()).compact();
         return token;
     }
 
@@ -149,7 +149,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
             String token = httpHeaderToken.substring(7);
             try {
                 // token 过期的话，在这一步会抛出一个异常
-                Claims claims = Jwts.parser().setSigningKey(jwtProperties.getKey()).parseClaimsJws(token).getBody();
+                Claims claims = Jwts.parser().setSigningKey(securityProperties.getKey()).parseClaimsJws(token).getBody();
                 // 所以就不检测这个条件： claims.getExpiration().after(now)
                 if (claims.getIssuedAt().before(now)) {
                     //校验 jti 是否被撤销了

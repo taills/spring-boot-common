@@ -40,9 +40,10 @@ spring:
       pool:
         size: 10
 common:
-  jwt:
+  security:
     key: ZGdacn4IxhfzG9Td5Y99FlM1bIFNiE0k7PL7cuNLlTDMbGyEVh5a3WSijNhAMpfz9GSOAy6HaDVhAQoUG8YfqimX53zqFnUHY
     life-time: 86400
+    mandatory-two-step-authentication: on
   # 24 小时
 
 # ===== 自定义swagger配置 ===== #

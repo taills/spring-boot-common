@@ -4,6 +4,7 @@ create table if not exists security_user
     username     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment '用户名',
     nickname     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment '昵称',
     password     varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment '密码',
+    totp_secret  varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci null comment '2FA 密钥',
     expired_at   datetime default '2099-12-31 00:00:00' comment '过期时间',
     is_locked    boolean  default false comment '是否锁定',
     is_enabled   boolean  default false comment '是否启用',
