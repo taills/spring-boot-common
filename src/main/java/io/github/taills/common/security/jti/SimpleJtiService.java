@@ -2,8 +2,10 @@ package io.github.taills.common.security.jti;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName SimpleJtiService
@@ -15,7 +17,7 @@ import java.util.Set;
 @Slf4j
 public class SimpleJtiService implements JtiService {
 
-    private Set<String> stringSet = new HashSet<>();
+    private final Map<String, Date> map = new HashMap<>();
 
     /**
      * 撤销某个 token
@@ -24,7 +26,7 @@ public class SimpleJtiService implements JtiService {
      */
     @Override
     public void revoke(String jti) {
-        stringSet.add(jti);
+        map.put(jti, new Date());
     }
 
     /**
@@ -35,6 +37,23 @@ public class SimpleJtiService implements JtiService {
      */
     @Override
     public boolean isRevoked(String jti) {
-        return stringSet.contains(jti);
+        return map.containsKey(jti);
     }
+
+    /**
+     * 清理已过期的记录
+     *
+     * @param expiredDate 过期时间
+     */
+    @Override
+    public void cleanupExpiredJti(Date expiredDate) {
+        synchronized (this) {
+            Map<String, Date> newMap = map.entrySet().stream().filter(x -> x.getValue().after(expiredDate))
+                    .collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
+            this.map.clear();
+            this.map.putAll(newMap);
+        }
+    }
+
+
 }

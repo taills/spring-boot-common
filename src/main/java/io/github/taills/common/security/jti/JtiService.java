@@ -1,5 +1,7 @@
 package io.github.taills.common.security.jti;
 
+import java.util.Date;
+
 /**
  * @ClassName JtiBlackListService
  * @Description
@@ -21,5 +23,10 @@ public interface JtiService {
      */
     boolean isRevoked(String jti);
 
+    /**
+     * 清理已过期的记录
+     * @param expiredDate  过期时间
+     */
+    void cleanupExpiredJti(Date expiredDate);
 
 }
