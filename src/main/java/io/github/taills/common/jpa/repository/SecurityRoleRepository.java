@@ -16,4 +16,11 @@ public interface SecurityRoleRepository extends BaseRepository<SecurityRole, Str
      * @return
      */
     long countAllByRoleName(String roleName);
+
+    /**
+     * 以 roleName 查找角色
+     * @param roleName
+     * @return
+     */
+    SecurityRole findFirstByRoleName(String roleName);
 }

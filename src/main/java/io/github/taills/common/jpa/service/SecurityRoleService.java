@@ -36,6 +36,7 @@ public class SecurityRoleService extends AbstractService<SecurityRole, String> {
         this.insertIfNotExists("ADMIN_CREATE", "管理员-创建");
         this.insertIfNotExists("ADMIN_UPDATE", "管理员-更新");
         this.insertIfNotExists("ADMIN_DELETE", "管理员-删除");
+        this.insertIfNotExists("USER", "常规用户");
     }
 
     /**
@@ -57,12 +58,23 @@ public class SecurityRoleService extends AbstractService<SecurityRole, String> {
 
     /**
      * 获取管理员的角色
+     *
      * @return
      */
-    public List<SecurityRole> getAdminRoles(){
+    public List<SecurityRole> getAdminRoles() {
         SecurityRole securityRole = new SecurityRole();
         securityRole.setRoleName("ADMIN");
         ExampleMatcher stringMatcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
-        return rep.findAll(Example.of(securityRole,stringMatcher));
+        return rep.findAll(Example.of(securityRole, stringMatcher));
+    }
+
+    /**
+     * 以 roleName 查找角色
+     * @param roleName
+     * @return
+     */
+
+    public SecurityRole getFirstByRoleName(String roleName) {
+        return rep.findFirstByRoleName(roleName);
     }
 }

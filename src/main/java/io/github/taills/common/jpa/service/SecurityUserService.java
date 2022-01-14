@@ -1,5 +1,6 @@
 package io.github.taills.common.jpa.service;
 
+import io.github.taills.common.jpa.entity.SecurityRole;
 import io.github.taills.common.jpa.entity.SecurityUser;
 import io.github.taills.common.jpa.repository.SecurityUserRepository;
 import io.github.taills.common.security.jti.JtiService;
@@ -178,6 +179,9 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     public <S extends SecurityUser> S save(S entity) {
         if (entity.getPassword() != null) {
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+        }
+        if (entity.getRoles().isEmpty()){
+            entity.getRoles().add(securityRoleService.getFirstByRoleName("USER"));
         }
         return super.save(entity);
     }
