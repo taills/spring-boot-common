@@ -113,6 +113,11 @@ create table user
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 ```
 
+在生成两步认证密钥时，会碰到随机数熵池干了的情况，可使用以下java运行参数解决。
+
+```shell
+java -Djava.security.egd=file:/dev/./urandom -jar xxx.jar
+```
 ## 限流器
 
 默认限流器的实现使用了Guava的 RateLimiter，适合单实例内限流。
