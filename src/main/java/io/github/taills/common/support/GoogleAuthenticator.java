@@ -28,6 +28,10 @@ public class GoogleAuthenticator {
      */
     private static final int SECRET_SIZE = 40;
 
+    public static int getSecretStringLength() {
+        return (int) (SECRET_SIZE * 1.6);
+    }
+
     /**
      * 宽限窗口期，为了避免服务器时间与验证器存在误差而造成验证失败。
      * 窗口期设置为0时，某一时刻内，只有 1 个有效的code

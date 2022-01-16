@@ -11,11 +11,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -65,6 +69,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     public Optional<SecurityUser> findByUsername(String username) {
         return rep.findByUsername(username);
     }
+
 
     /**
      * 校验 SecurityUser 对象的密码
@@ -125,10 +130,21 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      * @return
      */
     public String issueToken(SecurityUserDetails userDetails) {
+        Set<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet());
+        return issueToken(userDetails.getUsername(), authorities);
+    }
+
+    /**
+     * 根据用户名和角色颁发 token
+     *
+     * @param username
+     * @param authorities
+     * @return
+     */
+    public String issueToken(String username, Set<String> authorities) {
         Date exp = new Date(System.currentTimeMillis() + securityProperties.getLifeTime() * 1000);
         Date now = new Date(System.currentTimeMillis());
-        Set<String> authorities = userDetails.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toSet());
-        String token = Jwts.builder().setSubject(userDetails.getUsername())
+        String token = Jwts.builder().setSubject(username)
                 .claim("authorities", String.join(",", authorities))
                 .setIssuedAt(now)
                 .setIssuer("JWT")
@@ -136,6 +152,16 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
                 .setId(SnowFlake.get().nextSid())
                 .setExpiration(exp).signWith(SignatureAlgorithm.HS512, securityProperties.getKey()).compact();
         return token;
+    }
+
+    /**
+     * 颁发空 token，无任何角色信息
+     *
+     * @param username
+     * @return
+     */
+    public String issueEmptyAuthorityToken(String username) {
+        return issueToken(username, new HashSet<>());
     }
 
     /**
@@ -158,7 +184,19 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
                         //查找
                         Optional<SecurityUser> optionalSecurityUser = findByUsername(claims.getSubject());
                         if (optionalSecurityUser.isPresent()) {
-                            return Optional.of(SecurityUserDetails.fromSecurityUser(optionalSecurityUser.get()));
+                            SecurityUserDetails securityUserDetails = SecurityUserDetails.fromSecurityUser(optionalSecurityUser.get());
+                            //这里要从 token 里面获取角色
+                            securityUserDetails.getAuthorities().clear();
+                            String[] authorities = claims.get("authorities", String.class).split(",");
+                            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+                            for (int i = 0; i < authorities.length; i++) {
+                                if (authorities[i].length() > 0) {
+                                    grantedAuthorities.add(new SimpleGrantedAuthority(authorities[i]));
+                                }
+                            }
+                            securityUserDetails.setAuthorities(grantedAuthorities);
+                            ////
+                            return Optional.of(securityUserDetails);
                         }
                     } else {
                         log.debug("token 已被撤销。 {}", claims.getId());
@@ -175,12 +213,14 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     }
 
 
+
     @Override
+    @Transactional
     public <S extends SecurityUser> S save(S entity) {
-        if (entity.getPassword() != null) {
+        if (!StringUtils.isBlank(entity.getPassword())) {
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         }
-        if (entity.getRoles().isEmpty()){
+        if (entity.getRoles().isEmpty()) {
             entity.getRoles().add(securityRoleService.getFirstByRoleName("USER"));
         }
         return super.save(entity);

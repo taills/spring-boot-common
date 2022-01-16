@@ -17,14 +17,19 @@ public class SecurityProperties {
     /**
      * JWT 密钥
      */
-    private String key;
+    private String key = "这是一个必须要改的值。";
     /**
      * 签发 token 的有效时长，单位：秒
      */
-    private Integer lifeTime;
+    private Integer lifeTime = 3600;
 
     /**
      * 是否强制二步认证
      */
-    private boolean mandatoryTwoStepAuthentication;
+    private boolean mandatoryTwoStepAuthentication = false;
+
+    /**
+     * 签发者，会显示在app里
+     */
+    private String twoSetpIssuer = "taills";
 }
