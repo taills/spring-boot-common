@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "common.security")
 @Data
-public class SecurityProperties {
+public class CommonSecurityProperties {
     /**
      * JWT 密钥
      */
@@ -32,4 +32,21 @@ public class SecurityProperties {
      * 签发者，会显示在app里
      */
     private String twoSetpIssuer = "taills";
+
+    /**
+     * 使用 x-forwarded-for http 头里的内容来做判断
+     * 这个值容易被伪造，但反代环境又很常见
+     * 所以在第一层 nginx 中，需要配置如下参数：
+     * proxy_set_header X-Forwarded-For $remote_addr;
+     * 在第一层 nginx 里把 remote addr 直接赋值给 x-forwarded-for 头
+     * 如果没有反代环境，直接启用 ipAclUseRemoteAddr 就行了
+     */
+    private boolean ipAclUseXForwardedFor = true;
+
+    /**
+     * 使用 remote addr 里面的 IP 来做判断
+     */
+    private boolean ipAclUseRemoteAddr = false;
+
+
 }

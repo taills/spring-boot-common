@@ -100,3 +100,23 @@ create table if not exists security_group_role
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
     comment '用户组-角色 [中间表]';
+
+create table if not exists security_ip_acl
+(
+    id varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment 'ID',
+    acl_type       enum ('ALLOW','DENY')                                         null default 'ALLOW' comment '类型。 ALLOW/DENY',
+    ip_range_begin varbinary(16)                                                 not null comment 'IP范围开始的地址',
+    ip_range_end   varbinary(16)                                                 not null comment 'IP范围结束的地址',
+    description    varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null comment '描述',
+    gmt_create     datetime                                                           default CURRENT_TIMESTAMP comment '创建时间',
+    gmt_modified   datetime                                                           default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP comment '修改时间',
+    is_deleted     boolean                                                            default false comment '是否删除',
+    primary key (id),
+    index idx_acl_type (acl_type),
+    index idx_ip_range_begin (ip_range_begin),
+    index idx_ip_range_end (ip_range_end),
+    index idx_is_deleted (is_deleted)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+    comment 'IP 访问控制列表';
+

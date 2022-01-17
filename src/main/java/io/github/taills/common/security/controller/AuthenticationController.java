@@ -6,7 +6,7 @@ import io.github.taills.common.jpa.entity.SecurityUser;
 import io.github.taills.common.jpa.service.SecurityUserService;
 import io.github.taills.common.limiter.Limit;
 import io.github.taills.common.response.ApiResult;
-import io.github.taills.common.security.properties.SecurityProperties;
+import io.github.taills.common.security.properties.CommonSecurityProperties;
 import io.github.taills.common.security.support.model.response.TokenChallenge;
 import io.github.taills.common.support.GoogleAuthenticator;
 import io.github.taills.common.util.TokenUtils;
@@ -36,7 +36,7 @@ public class AuthenticationController {
     private SecurityUserService userService;
 
     @Autowired
-    private SecurityProperties securityProperties;
+    private CommonSecurityProperties commonSecurityProperties;
 
 
     @PostMapping("/login")
@@ -50,7 +50,7 @@ public class AuthenticationController {
             SecurityUser user = optionalSecurityUser.get();
             //默认给空角色 token
             tokenChallenge.setToken(userService.issueEmptyAuthorityToken(username));
-            if (securityProperties.isMandatoryTwoStepAuthentication()) {
+            if (commonSecurityProperties.isMandatoryTwoStepAuthentication()) {
                 // 强制两步认证，要求用户必须绑定两步认证
                 if (StringUtils.isBlank(user.getTotpSecret())) {
                     // 未绑定，要求绑定
@@ -98,7 +98,7 @@ public class AuthenticationController {
         String secret = GoogleAuthenticator.generateSecretKey();
         TokenChallenge tokenChallenge = new TokenChallenge();
         tokenChallenge.setSecret(secret);
-        tokenChallenge.setTotpUrl(GoogleAuthenticator.makeUrl(securityProperties.getTwoSetpIssuer(), TokenUtils.getCurrentUser().getUsername(), secret));
+        tokenChallenge.setTotpUrl(GoogleAuthenticator.makeUrl(commonSecurityProperties.getTwoSetpIssuer(), TokenUtils.getCurrentUser().getUsername(), secret));
         return ApiResult.success(tokenChallenge);
     }
 

@@ -1,17 +1,15 @@
 package io.github.taills.common.jpa.service;
 
-import io.github.taills.common.jpa.entity.SecurityRole;
 import io.github.taills.common.jpa.entity.SecurityUser;
 import io.github.taills.common.jpa.repository.SecurityUserRepository;
 import io.github.taills.common.security.jti.JtiService;
-import io.github.taills.common.security.properties.SecurityProperties;
+import io.github.taills.common.security.properties.CommonSecurityProperties;
 import io.github.taills.common.security.userdetails.SecurityUserDetails;
 import io.github.taills.common.util.SnowFlake;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,7 +38,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
     private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");
 
-    private final SecurityProperties securityProperties;
+    private final CommonSecurityProperties commonSecurityProperties;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -48,14 +46,14 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
 
     private final String tokenPrefix = "Bearer ";
 
-    public SecurityUserService(SecurityProperties securityProperties, PasswordEncoder passwordEncoder, JtiService jtiService) {
+    public SecurityUserService(CommonSecurityProperties commonSecurityProperties, PasswordEncoder passwordEncoder, JtiService jtiService) {
         this.passwordEncoder = passwordEncoder;
-        if (null == securityProperties.getKey() || securityProperties.getKey().isEmpty()) {
-            securityProperties = new SecurityProperties();
-            securityProperties.setKey("this is default jwt key.");
-            securityProperties.setLifeTime(60 * 60 * 24);
+        if (null == commonSecurityProperties.getKey() || commonSecurityProperties.getKey().isEmpty()) {
+            commonSecurityProperties = new CommonSecurityProperties();
+            commonSecurityProperties.setKey("this is default jwt key.");
+            commonSecurityProperties.setLifeTime(60 * 60 * 24);
         }
-        this.securityProperties = securityProperties;
+        this.commonSecurityProperties = commonSecurityProperties;
         this.jtiService = jtiService;
     }
 
@@ -146,7 +144,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
      * @return
      */
     public String issueToken(String username, Set<String> authorities) {
-        Date exp = new Date(System.currentTimeMillis() + securityProperties.getLifeTime() * 1000);
+        Date exp = new Date(System.currentTimeMillis() + commonSecurityProperties.getLifeTime() * 1000);
         Date now = new Date(System.currentTimeMillis());
         String token = Jwts.builder().setSubject(username)
                 .claim("authorities", String.join(",", authorities))
@@ -154,7 +152,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
                 .setIssuer("JWT")
                 .setExpiration(exp)
                 .setId(SnowFlake.get().nextSid())
-                .setExpiration(exp).signWith(SignatureAlgorithm.HS512, securityProperties.getKey()).compact();
+                .setExpiration(exp).signWith(SignatureAlgorithm.HS512, commonSecurityProperties.getKey()).compact();
         return token;
     }
 
@@ -180,7 +178,7 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
             String token = httpHeaderToken.substring(7);
             try {
                 // token 过期的话，在这一步会抛出一个异常
-                Claims claims = Jwts.parser().setSigningKey(securityProperties.getKey()).parseClaimsJws(token).getBody();
+                Claims claims = Jwts.parser().setSigningKey(commonSecurityProperties.getKey()).parseClaimsJws(token).getBody();
                 // 所以就不检测这个条件： claims.getExpiration().after(now)
                 if (claims.getIssuedAt().before(now)) {
                     //校验 jti 是否被撤销了
