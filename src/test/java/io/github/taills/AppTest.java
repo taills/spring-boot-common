@@ -19,7 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class AppTest {
+public class AppTest {
 
     @Autowired
     private MockMvc mockMvc;
