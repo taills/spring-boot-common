@@ -28,7 +28,7 @@ class AppTest {
     private WebApplicationContext webApplicationContext;
 
     @Test
-    void setp1Register() throws Exception {
+    public void setp1Register() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/security/admin/register")
                         .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
                         .param("username", "admin")
