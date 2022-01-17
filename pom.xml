@@ -193,5 +193,12 @@
             <version>1.15</version>
         </dependency>
 
+        <!-- flywaydb -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
