@@ -1,6 +1,7 @@
 package io.github.taills.common.limiter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,13 +42,13 @@ public class LimiterAop {
             if (annotation.useRemoteHost()) {
                 stringBuilderKey.append(request.getRemoteHost());
             }
-            if (annotation.useRemoteUser() && null != request.getRemoteUser()) {
+            if (annotation.useRemoteUser() && StringUtils.isNotBlank(request.getRemoteUser())) {
                 stringBuilderKey.append(request.getRemoteUser());
             }
-            if (annotation.useUserAgent() && null != request.getHeader(userAgent)) {
+            if (annotation.useUserAgent() && StringUtils.isNotBlank(request.getHeader(userAgent))) {
                 stringBuilderKey.append(request.getHeader(userAgent));
             }
-            if (annotation.useXForwardedFor() && null != request.getHeader(xForwardedFor)) {
+            if (annotation.useXForwardedFor() && StringUtils.isNotBlank(request.getHeader(xForwardedFor))) {
                 stringBuilderKey.append(request.getHeader(xForwardedFor));
             }
             stringBuilderKey.append(request.getMethod());
