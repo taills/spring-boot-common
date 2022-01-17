@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +37,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @CacheConfig(cacheNames = "SecurityUserService")
 public class SecurityUserService extends AbstractService<SecurityUser, String> {
+
+    private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");
 
     private final SecurityProperties securityProperties;
 
@@ -217,7 +221,9 @@ public class SecurityUserService extends AbstractService<SecurityUser, String> {
     @Override
     @Transactional
     public <S extends SecurityUser> S save(S entity) {
-        if (!StringUtils.isBlank(entity.getPassword())) {
+        Matcher matcher = this.BCRYPT_PATTERN.matcher(entity.getPassword());
+        //判断是否是BCrypt格式，不是就加密
+        if (!matcher.matches()){
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         }
         if (entity.getRoles().isEmpty()) {
