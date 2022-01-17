@@ -54,9 +54,10 @@ public class LimiterAop {
             stringBuilderKey.append(request.getRequestURI());
             // key 用以上的这些玩意拼接，取字符串哈希值作为 key
             Integer key = stringBuilderKey.toString().hashCode();
-            limiter.doLimiter(joinPoint, key, annotation.permitsPerSecond(), annotation.timeout(), annotation.timeunit());
+            return limiter.doLimiter(joinPoint, key, annotation.permitsPerSecond(), annotation.timeout(), annotation.timeunit());
+        }else{
+            return joinPoint.proceed();
         }
-        return joinPoint.proceed();
     }
 
 }
