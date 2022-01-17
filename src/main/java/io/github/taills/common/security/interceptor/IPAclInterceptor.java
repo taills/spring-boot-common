@@ -33,6 +33,8 @@ public class IPAclInterceptor implements HandlerInterceptor {
             String xForwardFor = request.getHeader("x-forwarded-for");
             if (xForwardFor.indexOf(",") > 0) {
                 checkIp(xForwardFor.split(",")[0]);
+            }else {
+                checkIp(xForwardFor);
             }
         }
         if (commonSecurityProperties.isIpAclUseRemoteAddr()) {
