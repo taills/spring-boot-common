@@ -113,11 +113,41 @@ create table user
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 ```
 
+## 两步认证 (2FA)
+
+#### 两步认证配置说明
+- `mandatory-two-step-authentication` 强制启用 ，开启后，用户必须绑定才能登录使用，未开启时，用户可自愿绑定启用两步认证功能。
+- `two-setp-issuer` 会展示在xx验证器上面的名字
+```yaml
+common:
+  security:
+    mandatory-two-step-authentication: true
+    two-setp-issuer: 产品名称
+```
+
 在生成两步认证密钥时，会碰到随机数熵池干了的情况，可使用以下java运行参数解决。
 
 ```shell
 java -Djava.security.egd=file:/dev/./urandom -jar xxx.jar
 ```
+
+#### 两步认证流程说明
+```markdown
+graph TD
+B{校验账号密码}
+B ---> |校验失败| A[登录:/security/login]
+A ---> |账号密码登录| B
+B ---> |校验成功| C{是否开启强制两步认证}
+C ---> |未开启| D{用户是否启用两步认证}
+D ---> |未启用| D1[返回可用Token]
+D ---> |已启用| G
+C ---> |开启| E{用户是否已经绑定}
+E ---> |未绑定| F[要求绑定:/security/bind]
+E ---> |已绑定| G[校验动态码:/security/challenge]
+```
+
+![img.png](readme/2fa-flow-chart.png)
+
 ## 限流器
 
 默认限流器的实现使用了Guava的 RateLimiter，适合单实例内限流。
