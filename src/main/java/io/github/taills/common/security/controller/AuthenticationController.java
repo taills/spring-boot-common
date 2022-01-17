@@ -26,7 +26,6 @@ import java.util.Optional;
  * @Author nil
  * @Date 2021/10/22 10:47 下午
  **/
-@RestController
 @ApiResponseBody
 @RequestMapping("/security")
 @Slf4j
@@ -118,7 +117,6 @@ public class AuthenticationController {
                 SecurityUser securityUser = optionalSecurityUser.get();
                 if (StringUtils.isBlank(securityUser.getTotpSecret())) {
                     securityUser.setTotpSecret(secret);
-                    securityUser.setPassword(null);
                     userService.save(securityUser);
                     return ApiResult.success();
                 } else {
