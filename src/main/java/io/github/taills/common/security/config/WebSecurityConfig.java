@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // dont authenticate this particular request
                 .authorizeRequests()
                 .antMatchers("/public/**").permitAll()
+                .antMatchers("/","/index.html").permitAll()
                 // allow swagger ui
                 .antMatchers("/swagger-ui/**",
                         "/webjars/**",
