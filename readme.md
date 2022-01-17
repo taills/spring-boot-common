@@ -36,7 +36,15 @@ spring:
       matching-strategy: ant_path_matcher
 ```
 
+## IP 访问控制列表 (黑白名单实现)
+参考 nginx 配置指令，使用了 `ALLOW` 和 `DENY` 两种类型的记录
 
+遵循：
+- allow 类型的放行
+- deny 类型的禁止
+- 若IP地址同时存在于 allow 和 deny 中，则按 allow 处理
+
+参考 [SecurityIpAclServiceTest.java](blob/main/src/test/java/io/github/taills/common/jpa/service/SecurityIpAclServiceTest.java)
 
 ## JPA
 
