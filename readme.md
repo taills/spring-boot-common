@@ -44,7 +44,7 @@ spring:
 - deny 类型的禁止
 - 若IP地址同时存在于 allow 和 deny 中，则按 allow 处理
 
-参考 [SecurityIpAclServiceTest.java](blob/main/src/test/java/io/github/taills/common/jpa/service/SecurityIpAclServiceTest.java)
+参考 [SecurityIpAclServiceTest.java](src/test/java/io/github/taills/common/jpa/service/SecurityIpAclServiceTest.java)
 
 ## JPA
 
