@@ -35,13 +35,6 @@ import java.util.List;
 public class SwaggerConfiguration {
     private final SwaggerProperties swaggerProperties;
 
-    @Value("classpath:/META-INF/resources/webjars/springfox-swagger-ui/springfox.js")
-    private Resource springfoxJs;
-
-    @Value("classpath:/springfox-append.js")
-    private Resource springfoxAppendJs;
-
-
     @Autowired
     private SwaggerJavascriptHookFilter swaggerJavascriptHookFilter;
 
@@ -99,6 +92,7 @@ public class SwaggerConfiguration {
 
     /**
      * 拦截 swagger 的js 内容，附加一段js，用于保存/读取 token with localStorage
+     *
      * @return
      */
     @Bean
