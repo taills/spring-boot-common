@@ -3,7 +3,27 @@
 ## Swagger
 项目集成了 swagger，并增加了一段javascript，实现了刷新页面时，token 还保存着。
 
-在使用 SpringBoot 2.6 时，使用 Swagger 3.0.0 会报异常
+注意事项：
+- 地址为 `/swagger-ui/`
+- 默认仅允许 `127.0.0.1` 访问
+- 默认启用状态为  `false`
+
+配置示例
+```yaml
+# ===== 自定义swagger配置 ===== #
+swagger:
+  enable: true
+  application-name: IF3000 Manage Platform
+  application-version: 0.0.1
+  group-name: ${swagger.application-name}
+  application-description: ${swagger.application-name}
+  contact:
+    name: taills
+    email: taills@qq.com
+    url: https://github.com/taills/
+```
+
+### 在使用 SpringBoot 2.6 时，使用 Swagger 3.0.0 会报异常
 
 参考信息 https://stackoverflow.com/questions/70036953/springboot-2-6-0-spring-fox-3-failed-to-start-bean-documentationpluginsboot
 
@@ -15,6 +35,8 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 ```
+
+
 
 ## JPA
 
