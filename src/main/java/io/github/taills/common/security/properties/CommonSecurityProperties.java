@@ -42,11 +42,4 @@ public class CommonSecurityProperties {
      * 如果没有反代环境，直接启用 ipAclUseRemoteAddr 就行了
      */
     private boolean ipAclUseXForwardedFor = true;
-
-    /**
-     * 使用 remote addr 里面的 IP 来做判断
-     */
-    private boolean ipAclUseRemoteAddr = false;
-
-
 }

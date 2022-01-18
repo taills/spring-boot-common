@@ -33,22 +33,21 @@ public class IPAclInterceptor implements HandlerInterceptor {
             String xForwardFor = request.getHeader("x-forwarded-for");
             if (xForwardFor.indexOf(",") > 0) {
                 checkIp(xForwardFor.split(",")[0]);
-            }else {
+            } else {
                 checkIp(xForwardFor);
             }
-        }
-        if (commonSecurityProperties.isIpAclUseRemoteAddr()) {
+        } else {
             checkIp(request.getRemoteAddr());
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     private void checkIp(String ip) {
-        log.debug("check {}",ip);
+        log.debug("check {}", ip);
         //优先 allow list，存在则放行
         //其次 deny，存在则拦截
         if (!ipAclService.inAllowList(ip) && ipAclService.inDenyList(ip)) {
-                throw ExceptionManager.create(1006);
+            throw ExceptionManager.create(1006);
         }
     }
 }
