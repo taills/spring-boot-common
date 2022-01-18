@@ -1,4 +1,4 @@
-package io.github.taills.common.jpa.controller;
+package io.github.taills.common.security.controller;
 
 import io.github.taills.common.jpa.service.SecurityIpAclService;
 import io.github.taills.common.annotation.ApiResponseBody;
