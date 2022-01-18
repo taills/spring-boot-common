@@ -83,7 +83,7 @@ public class BaseEntity implements Serializable {
 
     @PrePersist
     void preInsert() {
-        //中建表的数据并不会过这个方法!!
+        //JPA中间表的数据并不会过这个方法!!
         log.debug("preInsert {} {}", this.id == null, this);
         if (this.gmtCreate == null) {
             this.gmtCreate = new Date();
