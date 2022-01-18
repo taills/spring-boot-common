@@ -4,7 +4,7 @@
 项目集成了 swagger，并增加了一段javascript，实现了刷新页面时，token 还保存着。
 
 注意事项：
-- 地址为 `/swagger-ui/`
+- 地址为 `/swagger-ui/index.html`
 - 默认仅允许 `127.0.0.1` 访问
 - 默认启用状态为  `false`
 
