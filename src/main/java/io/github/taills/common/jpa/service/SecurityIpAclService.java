@@ -2,6 +2,7 @@ package io.github.taills.common.jpa.service;
 
 import io.github.taills.common.jpa.entity.SecurityIpAcl;
 import io.github.taills.common.jpa.repository.SecurityIpAclRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,5 +38,14 @@ public class SecurityIpAclService extends AbstractService<SecurityIpAcl, Integer
      */
     public boolean inDenyList(String ip) {
         return rep.countInDenyList(ip) > 0;
+    }
+
+    @Override
+    public <S extends SecurityIpAcl> S save(S entity) {
+        //ACL 类型 给默认值为 ALLOW
+        if (StringUtils.isBlank(entity.getAclType())){
+            entity.setAclType("ALLOW");
+        }
+        return super.save(entity);
     }
 }
