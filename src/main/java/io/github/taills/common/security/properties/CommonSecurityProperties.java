@@ -42,4 +42,15 @@ public class CommonSecurityProperties {
      * 如果没有反代环境，直接启用 ipAclUseRemoteAddr 就行了
      */
     private boolean ipAclUseXForwardedFor = true;
+
+
+    /**
+     * 是否 allow 优先。开启allow优先后，当同一IP同时存在 allow 和 deny 记录时，放行。反之则是 deny
+     */
+    private boolean ipAclPriorityAllow = true;
+
+    /**
+     * 在数据库中未找到记录时，默认为 allow
+     */
+    private boolean ipAclDefaultAllow = true;
 }

@@ -45,7 +45,9 @@ common:
     life-time: 86400
     mandatory-two-step-authentication: true
     two-setp-issuer: 淘宝
-    ip-acl-use-remote-addr: true
+    ip-acl-priority-allow: true
+    ip-acl-default-allow: true
+    ip-acl-use-x-forwarded-for: true
   # 24 小时
 
 # ===== 自定义swagger配置 ===== #

@@ -42,12 +42,43 @@ public class IPAclInterceptor implements HandlerInterceptor {
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
+    /**
+     * 检查 IP 。
+     * 代码检查器说不要再判断里写复杂的语句，另一个也是方便阅读，把条件判断拆分得很细
+     * @param ip
+     */
     private void checkIp(String ip) {
-        log.debug("check {}", ip);
-        //优先 allow list，存在则放行
-        //其次 deny，存在则拦截
-        if (!ipAclService.inAllowList(ip) && ipAclService.inDenyList(ip)) {
-            throw ExceptionManager.create(1006);
+        //判断 allow 和 deny 哪个优先
+        if (commonSecurityProperties.isIpAclPriorityAllow()) {
+            // allow 优先
+            if (ipAclService.inAllowList(ip)) {
+                //存在 allow 记录，直接返回，放行
+                return;
+            }
+            // 不存在 allow 记录，则继续往下走
+            if (ipAclService.inDenyList(ip)) {
+                // 存在 deny 记录，拦截
+                throw ExceptionManager.create(1006);
+            } else {
+                // 默认策略
+                if (!commonSecurityProperties.isIpAclDefaultAllow()) {
+                    // 默认策略是 deny，拦截
+                    throw ExceptionManager.create(1006);
+                }
+            }
+        } else {
+            // deny 优先
+            if (ipAclService.inDenyList(ip)) {
+                //存在 deny，则拦截
+                throw ExceptionManager.create(1006);
+            }else {
+                // 不存在 deny
+                if (!commonSecurityProperties.isIpAclDefaultAllow() && !ipAclService.inAllowList(ip)){
+                    // 默认策略是 deny，且ip又不处于 allow 列表中，拦截
+                    throw ExceptionManager.create(1006);
+                }
+
+            }
         }
     }
 }

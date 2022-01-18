@@ -42,7 +42,19 @@ spring:
 遵循：
 - allow 类型的放行
 - deny 类型的禁止
-- 若IP地址同时存在于 allow 和 deny 中，则按 allow 处理
+- 若IP地址同时存在于 allow 和 deny 中，默认按 allow 处理，可对此参数进行配置
+
+#### 配置
+```yaml
+common:
+  security:
+    ip-acl-priority-allow: true
+    # 是否 allow 优先，反之则 deny 优先
+    ip-acl-default-allow: true
+    # 默认 allow，反之则 默认 deny
+    ip-acl-use-x-forwarded-for: true
+    # 是否使用 x-forwarded-for ，反之则使用 remote addr
+```
 
 参考 [SecurityIpAclServiceTest.java](src/test/java/io/github/taills/common/jpa/service/SecurityIpAclServiceTest.java)
 
