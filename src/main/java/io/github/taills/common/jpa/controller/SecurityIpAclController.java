@@ -18,7 +18,7 @@ import io.github.taills.common.jpa.entity.SecurityIpAcl;
 @RestController
 @RequestMapping("/SecurityIpAcl")
 @Api(tags = "SecurityIpAcl")
-public class SecurityIpAclController extends BaseController<SecurityIpAcl, Integer> {
+public class SecurityIpAclController extends BaseController<SecurityIpAcl, String> {
 
 	public SecurityIpAclController(SecurityIpAclService service) {
 		init(service);
