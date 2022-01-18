@@ -2,7 +2,9 @@ package io.github.taills.common.jpa.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import lombok.EqualsAndHashCode;
@@ -53,7 +55,7 @@ public class SecurityGroup extends BaseEntity implements Serializable {
 
 
     @ApiModelProperty(value = "角色列表")
-    @ManyToMany( fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "security_group_role",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))

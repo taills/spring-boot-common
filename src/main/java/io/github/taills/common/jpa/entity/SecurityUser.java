@@ -61,14 +61,14 @@ public class SecurityUser extends BaseEntity implements Serializable {
     @Column(name = "password", nullable = true, length = 64)
     private String password;
 
-	/**
-	 * 2FA 密钥
-	 * nullable : true
-	 * default  : null
-	 */
-	@ApiModelProperty(value = "2FA 密钥")
-	@Column(name = "totp_secret", nullable = true, length = 64)
-	private String totpSecret;
+    /**
+     * 2FA 密钥
+     * nullable : true
+     * default  : null
+     */
+    @ApiModelProperty(value = "2FA 密钥")
+    @Column(name = "totp_secret", nullable = true, length = 64)
+    private String totpSecret;
 
     /**
      * 过期时间
@@ -98,7 +98,7 @@ public class SecurityUser extends BaseEntity implements Serializable {
     private Boolean isEnabled;
 
     @ApiModelProperty(value = "关联用户的角色列表")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "security_user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -106,7 +106,7 @@ public class SecurityUser extends BaseEntity implements Serializable {
 
 
     @ApiModelProperty(value = "所属组")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @JoinTable(name = "security_user_group",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -117,6 +117,7 @@ public class SecurityUser extends BaseEntity implements Serializable {
         traversingGroupRoles(this.getGroups());
         return this.roles;
     }
+
     public void traversingGroupRoles(Set<SecurityGroup> root) {
         for (SecurityGroup node : root) {
             this.roles.addAll(node.getRoles());
