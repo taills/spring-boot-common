@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/security/user")
 @Api(tags = "SecurityUser")
-public class SecurityUserController extends BaseController<SecurityUser, Long> {
+public class SecurityUserController extends BaseController<SecurityUser, String> {
 
     private final SecurityUserService securityUserService;
 

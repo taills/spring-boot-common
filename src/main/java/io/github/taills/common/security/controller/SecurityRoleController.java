@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ApiResponseBody
 @RestController
 @RequestMapping("/security/role")
-public class SecurityRoleController extends BaseController<SecurityRole, Long> {
+public class SecurityRoleController extends BaseController<SecurityRole, String> {
     public SecurityRoleController(SecurityRoleService service) {
         init(service);
     }

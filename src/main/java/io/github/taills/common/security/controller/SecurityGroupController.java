@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @ApiResponseBody
 @RequestMapping("/security/group")
-public class SecurityGroupController extends BaseController<SecurityGroup, Long> {
+public class SecurityGroupController extends BaseController<SecurityGroup, String> {
     public SecurityGroupController(SecurityGroupService service) {
         init(service);
     }
