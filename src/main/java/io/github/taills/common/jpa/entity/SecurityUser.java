@@ -98,7 +98,7 @@ public class SecurityUser extends BaseEntity implements Serializable {
     private Boolean isEnabled;
 
     @ApiModelProperty(value = "关联用户的角色列表")
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "security_user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -106,7 +106,7 @@ public class SecurityUser extends BaseEntity implements Serializable {
 
 
     @ApiModelProperty(value = "所属组")
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @JoinTable(name = "security_user_group",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -129,7 +129,6 @@ public class AuthenticationController {
 
     @PostMapping("/admin/register")
     @ApiOperation(value = "注册管理员账号", notes = "仅在数据库为空时可以使用")
-    @Transactional
     @Limit(permitsPerSecond = 0.1)
     public ApiResult registerAdmin(@RequestParam("username") String username, @RequestParam("password") String password) {
         if (userService.count() > 0) {

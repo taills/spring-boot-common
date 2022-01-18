@@ -53,7 +53,7 @@ public class SecurityGroup extends BaseEntity implements Serializable {
 
 
     @ApiModelProperty(value = "角色列表")
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany( fetch = FetchType.EAGER)
     @JoinTable(name = "security_group_role",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
