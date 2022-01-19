@@ -46,7 +46,7 @@ jobs:
         run: mvn versions:set -DnewVersion=${{ steps.get_tag_name.outputs.TAG_NAME }} -DgenerateBackupPoms=false
 
       - name: Publish to Apache Maven Central
-        run: mvn --batch-mode clean install deploy -Pdeploy-to-central
+        run: mvn --batch-mode clean install deploy -Pdeploy-to-central -Dmaven.test.skip=true
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
