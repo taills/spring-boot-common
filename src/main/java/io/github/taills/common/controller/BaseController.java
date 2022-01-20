@@ -60,7 +60,7 @@ public class BaseController<T extends BaseEntity, ID> {
      *
      * @param pageNo         页码
      * @param pageSize       页长
-     * @param isOrderByIdAsc 是否按ID升序排列
+     * @param isOrderByCreateTimeAsc 是否按创建时间升序排列
      * @return
      */
     @GetMapping("/read")
@@ -68,12 +68,12 @@ public class BaseController<T extends BaseEntity, ID> {
     @PreAuthorize("hasRole('ADMIN_READ')")
     public List<T> read(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
                         @RequestParam(name = "pageSize", required = false, defaultValue = "100") Integer pageSize,
-                        @RequestParam(name = "isOrderByIdAsc", required = false, defaultValue = "true") boolean isOrderByIdAsc) {
-        Sort sort = Sort.by("id");
+                        @RequestParam(name = "isOrderByCreateTimeAsc", required = false, defaultValue = "false") boolean isOrderByCreateTimeAsc) {
+        Sort sort = Sort.by("gmtCreate");
         return this.baseService.findAll(
                 PageRequest.of(pageNo,
                         pageSize,
-                        isOrderByIdAsc ? sort.ascending() : sort.descending()
+                        isOrderByCreateTimeAsc ? sort.ascending() : sort.descending()
                 )
         ).getContent();
     }
