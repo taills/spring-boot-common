@@ -50,6 +50,13 @@ public class SecurityIpAclServiceTest {
         acl.setIpRangeEnd("192.168.1.254");
         securityIpAclService.save(acl);
 
+        acl = new SecurityIpAcl();
+        acl.setAclType("ALLOW");
+        acl.setDescription("单条IP");
+        acl.setIpRangeBegin("192.168.0.1");
+        acl.setIpRangeEnd("192.168.0.1");
+        securityIpAclService.save(acl);
+
 
         List<SecurityIpAcl> list = securityIpAclService.findAll();
         for (int i = 0; i < list.size(); i++) {
@@ -62,6 +69,7 @@ public class SecurityIpAclServiceTest {
         Assert.assertTrue("1050:0:0:0:5:600:300c:3280 应该在 allow 列表中",securityIpAclService.inAllowList("1050:0:0:0:5:600:300c:3280"));
 
         Assert.assertTrue("192.168.1.100 应该在 allow 列表中",securityIpAclService.inAllowList("192.168.1.100"));
+        Assert.assertTrue("192.168.0.1 应该在 allow 列表中",securityIpAclService.inAllowList("192.168.0.1"));
 
 
 
